@@ -19,7 +19,7 @@ import (
 
 var (
 	// YandeReConfig preconfigured config for yande.re site
-	YandeReConfig = getmoe.Config{
+	YandeReConfig = getmoe.Board{
 		URL: url.URL{
 			Scheme: "https",
 			Host:   "yande.re",
@@ -30,7 +30,7 @@ var (
 		Limit:        100,
 	}
 	// KonachanConfig preconfigured config for konachan.com site
-	KonachanConfig = getmoe.Config{
+	KonachanConfig = getmoe.Board{
 		BaseURL:      "https://konachan.com",
 		PasswordSalt: "So-I-Heard-You-Like-Mupkids-?--%s--",
 		Limit:        100,
@@ -38,7 +38,7 @@ var (
 )
 
 // GetConfig by name
-func GetConfig(url string) getmoe.Config {
+func GetConfig(url string) getmoe.Board {
 	switch url {
 	case "yande.re":
 		return YandeReConfig

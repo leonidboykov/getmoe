@@ -23,7 +23,7 @@ const (
 
 var (
 	// ChanSankakuConfig preconfigured config for Sankaku Channel site
-	ChanSankakuConfig = getmoe.Config{
+	ChanSankakuConfig = getmoe.Board{
 		BaseURL:      "https://capi.sankakucomplex.com",
 		PasswordSalt: "choujin-steiner--%s--",
 		Limit:        100,
@@ -31,7 +31,7 @@ var (
 		AppkeySalt:   "sankakuapp_%s_Z5NE9YASej",
 	}
 	// IdolSankakuConfig preconfigured config for Sankaku Idol site
-	IdolSankakuConfig = getmoe.Config{
+	IdolSankakuConfig = getmoe.Board{
 		BaseURL:      "https://iapi.sankakucomplex.com",
 		PasswordSalt: "choujin-steiner--%s--",
 		Limit:        100,
