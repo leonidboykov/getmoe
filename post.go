@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/leonidboykov/getmoe/utils"
 )
@@ -22,7 +23,13 @@ type Post struct {
 	Md5      string `json:"md5"`
 	Tags     string `json:"tags"`
 	Score    int    `json:"score"`
+	// TODO: add tags as array
 	// Tags     []string `json:"tags"`
+}
+
+// GetTags ...
+func (p *Post) GetTags() []string {
+	return strings.Split(p.Tags, " ")
 }
 
 // Save post to dir
@@ -50,19 +57,3 @@ func (p Post) Save(saveDir string) error {
 
 	return nil
 }
-
-// FromMoebooru convert to getmoe.Post struct
-// func FromMoebooru(p moebooru.Post) Post {
-// 	return Post{
-// 		ID:       p.ID,
-// 		FileURL:  p.FileURL,
-// 		FileSize: p.FileSize,
-// 		Width:    p.Width,
-// 		Height:   p.Height,
-// 		Author:   p.Author,
-// 		Source:   p.Source,
-// 		Rating:   p.Rating,
-// 		Md5:      p.Md5,
-// 		Tags:     strings.Split(p.Tags, " "),
-// 	}
-// }
