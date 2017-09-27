@@ -11,10 +11,10 @@ Default configurations are available for the following websites
 package sankaku
 
 import (
+	"net/url"
+
 	"github.com/leonidboykov/getmoe"
 )
-
-var supported = [...]string{"chan.sankakucomplex.com", "idol.sankakucomplex.com"}
 
 const (
 	autosuggestHost = "https://ias.sankakucomplex.com" // /tag/autosuggest?tag={tag}
@@ -24,7 +24,11 @@ const (
 var (
 	// ChanSankakuConfig preconfigured config for Sankaku Channel site
 	ChanSankakuConfig = getmoe.Board{
-		BaseURL:      "https://capi.sankakucomplex.com",
+		URL: url.URL{
+			Scheme: "https",
+			Host:   "capi.sankakucomplex.com",
+			Path:   "post/index.json", // TODO: Make this arg more configurable
+		},
 		PasswordSalt: "choujin-steiner--%s--",
 		Limit:        100,
 		UserAgent:    "SCChannelApp/2.7 (Android; black)",
@@ -32,10 +36,26 @@ var (
 	}
 	// IdolSankakuConfig preconfigured config for Sankaku Idol site
 	IdolSankakuConfig = getmoe.Board{
-		BaseURL:      "https://iapi.sankakucomplex.com",
+		URL: url.URL{
+			Scheme: "https",
+			Host:   "iapi.sankakucomplex.com",
+			Path:   "post/index.json", // TODO: Make this arg more configurable
+		},
 		PasswordSalt: "choujin-steiner--%s--",
 		Limit:        100,
 		UserAgent:    "SCChannelApp/2.7 (Android; idol)",
 		AppkeySalt:   "sankakuapp_%s_Z5NE9YASej",
 	}
 )
+
+// GetConfig by name
+func GetConfig(url string) getmoe.Board {
+	switch url {
+	case "chan.sankakucomplex.com":
+		return ChanSankakuConfig
+	case "idol.sankakucomplex.com":
+		return IdolSankakuConfig
+	default:
+		return getmoe.Board{}
+	}
+}

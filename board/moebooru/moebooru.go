@@ -25,13 +25,16 @@ var (
 			Host:   "yande.re",
 			Path:   "post.json", // TODO: Make this arg more configurable
 		},
-		BaseURL:      "https://yande.re",
 		PasswordSalt: "choujin-steiner--%s--",
 		Limit:        100,
 	}
 	// KonachanConfig preconfigured config for konachan.com site
 	KonachanConfig = getmoe.Board{
-		BaseURL:      "https://konachan.com",
+		URL: url.URL{
+			Scheme: "https",
+			Host:   "konachan.com",
+			Path:   "post.json", // TODO: Make this arg more configurable
+		},
 		PasswordSalt: "So-I-Heard-You-Like-Mupkids-?--%s--",
 		Limit:        100,
 	}
@@ -45,28 +48,6 @@ func GetConfig(url string) getmoe.Board {
 	case "konachan.com":
 		return KonachanConfig
 	default:
-		return getmoe.Config{}
+		return getmoe.Board{}
 	}
 }
-
-// RequestAll checks all pages
-// func RequestAll(config getmoe.Config, credentials getmoe.Credentials, query getmoe.SearchQuery) ([]Post, error) {
-// 	var pages []Post
-// 	localQuery := query
-//
-// 	for {
-// 		page, err := Request(config, credentials, localQuery)
-// 		if err != nil {
-// 			return pages, err
-// 		}
-//
-// 		localQuery.Page++
-// 		if len(page) == 0 {
-// 			break
-// 		}
-//
-// 		pages = append(pages, page...)
-// 		println(localQuery.Page)
-// 	}
-// 	return pages, nil
-// }

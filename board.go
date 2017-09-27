@@ -8,21 +8,24 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
 // Board holds data for API access
 type Board struct {
 	URL          url.URL
-	BaseURL      string
 	PasswordSalt string
 	Limit        int
 	UserAgent    string
 	AppkeySalt   string
-	Query        struct {
-		Tags string
-		Page int
-	}
+	Query
+}
+
+// Query ...
+type Query struct {
+	Tags []string
+	Page int
 }
 
 // BuildAuth creates query for auth
@@ -40,21 +43,24 @@ func (c *Board) BuildAuth(login, password string) {
 }
 
 // BuildRequest ...
-func (c *Board) BuildRequest(tags []string) url.URL {
+func (c *Board) BuildRequest() url.URL {
 	tempURL := c.URL
 
 	u := tempURL.Query()
 
-	t := strings.Join(tags, " ")
+	t := strings.Join(c.Query.Tags, " ")
 	u.Add("tags", t)
+	u.Add("limit", strconv.Itoa(c.Limit))
+	u.Add("page", strconv.Itoa(c.Query.Page))
+
 	tempURL.RawQuery = u.Encode()
 	return tempURL
 }
 
 // Request gets images by tags
-func (c *Board) Request(tags []string, form url.Values) ([]Post, error) {
-	// Remove Config reference from BuildTags
-	url := c.BuildRequest(tags)
+func (c *Board) Request() ([]Post, error) {
+	// Remove Board reference from BuildTags
+	url := c.BuildRequest()
 
 	resp, err := http.Get(url.String())
 	if err != nil {
@@ -77,26 +83,25 @@ func (c *Board) Request(tags []string, form url.Values) ([]Post, error) {
 }
 
 // RequestAll checks all pages
-// func (c *Config) RequestAll(tags []string) ([]Post, error) {
-// 	var pages []Post
-// 	localQuery := query
-//
-// 	for {
-// 		page, err := Request(tags)
-// 		if err != nil {
-// 			return pages, err
-// 		}
-//
-// 		localQuery.Page++
-// 		if len(page) == 0 {
-// 			break
-// 		}
-//
-// 		pages = append(pages, page...)
-// 		println(localQuery.Page)
-// 	}
-// 	return pages, nil
-// }
+func (c *Board) RequestAll() ([]Post, error) {
+	var pages []Post
+
+	for {
+		page, err := c.Request()
+		if err != nil {
+			return pages, err
+		}
+
+		if len(page) == 0 {
+			break
+		}
+
+		pages = append(pages, page...)
+
+		c.Query.Page++
+	}
+	return pages, nil
+}
 
 // Sha1 builds Sha1 hash with proper salt
 func Sha1(value, salt string) string {
