@@ -62,7 +62,18 @@ func (c *Board) Request() ([]Post, error) {
 	// Remove Board reference from BuildTags
 	url := c.BuildRequest()
 
-	resp, err := http.Get(url.String())
+	// There is no point to create new http client every request
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url.String(), nil)
+	if err != nil {
+		return []Post{}, nil
+	}
+
+	if c.UserAgent != "" {
+		req.Header.Set("User-Agent", c.UserAgent)
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return []Post{}, err
 	}

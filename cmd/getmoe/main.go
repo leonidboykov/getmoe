@@ -4,11 +4,12 @@ import (
 	"fmt"
 
 	"github.com/leonidboykov/getmoe"
-	"github.com/leonidboykov/getmoe/board/moebooru"
+	"github.com/leonidboykov/getmoe/board/sankaku"
 )
 
 func main() {
-	board := moebooru.YandeReConfig
+	// board := moebooru.YandeReConfig
+	board := sankaku.ChanSankakuConfig
 	board.BuildAuth("xxx", "xxx")
 
 	board.Query = getmoe.Query{
