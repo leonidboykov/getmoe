@@ -11,17 +11,18 @@ import (
 
 // Post contains post data, represents intersection of *boorus post structs
 type Post struct {
-	ID       int         `json:"id"`
-	FileURL  string      `json:"file_url"`
-	FileSize int         `json:"file_size"`
-	Width    int         `json:"width"`
-	Height   int         `json:"height"`
-	Author   string      `json:"author"`
-	Source   string      `json:"source"`
-	Rating   string      `json:"rating"`
-	Md5      string      `json:"md5"`
-	Tags     interface{} `json:"tags"`
-	Score    int         `json:"score"`
+	ID        int         `json:"id"`
+	FileURL   string      `json:"file_url"`
+	FileSize  int         `json:"file_size"`
+	Width     int         `json:"width"`
+	Height    int         `json:"height"`
+	CreatedAt int         `json:"created_at"` // TODO: Snakaku Channel uses CreatedAt.S-unixtime
+	Author    string      `json:"author"`
+	Source    string      `json:"source"`
+	Rating    string      `json:"rating"`
+	Md5       string      `json:"md5"`
+	Tags      interface{} `json:"tags"`
+	Score     int         `json:"score"`
 	// TODO: add tags as array
 	// Tags     []string `json:"tags"`
 }
