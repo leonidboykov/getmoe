@@ -27,35 +27,25 @@ var (
 		URL: url.URL{
 			Scheme: "https",
 			Host:   "capi.sankakucomplex.com",
-			Path:   "post/index.json", // TODO: Make this arg more configurable
+			Path:   "post/index.json",
 		},
 		PasswordSalt: "choujin-steiner--%s--",
 		Limit:        100,
 		UserAgent:    "SCChannelApp/2.7 (Android; black)",
 		AppkeySalt:   "sankakuapp_%s_Z5NE9YASej",
+		HasPages:     true,
 	}
 	// IdolSankakuConfig preconfigured config for Sankaku Idol site
 	IdolSankakuConfig = getmoe.Board{
 		URL: url.URL{
 			Scheme: "https",
 			Host:   "iapi.sankakucomplex.com",
-			Path:   "post/index.json", // TODO: Make this arg more configurable
+			Path:   "post/index.json",
 		},
 		PasswordSalt: "choujin-steiner--%s--",
 		Limit:        100,
 		UserAgent:    "SCChannelApp/2.7 (Android; idol)",
 		AppkeySalt:   "sankakuapp_%s_Z5NE9YASej",
+		HasPages:     true,
 	}
 )
-
-// GetConfig by name
-func GetConfig(url string) getmoe.Board {
-	switch url {
-	case "chan.sankakucomplex.com":
-		return ChanSankakuConfig
-	case "idol.sankakucomplex.com":
-		return IdolSankakuConfig
-	default:
-		return getmoe.Board{}
-	}
-}

@@ -23,31 +23,21 @@ var (
 		URL: url.URL{
 			Scheme: "https",
 			Host:   "yande.re",
-			Path:   "post.json", // TODO: Make this arg more configurable
+			Path:   "post.json",
 		},
 		PasswordSalt: "choujin-steiner--%s--",
-		Limit:        100,
+		Limit:        1000,
+		HasPages:     true,
 	}
 	// KonachanConfig preconfigured config for konachan.com site
 	KonachanConfig = getmoe.Board{
 		URL: url.URL{
 			Scheme: "https",
 			Host:   "konachan.com",
-			Path:   "post.json", // TODO: Make this arg more configurable
+			Path:   "post.json",
 		},
 		PasswordSalt: "So-I-Heard-You-Like-Mupkids-?--%s--",
-		Limit:        100,
+		Limit:        1000,
+		HasPages:     true,
 	}
 )
-
-// GetConfig by name
-func GetConfig(url string) getmoe.Board {
-	switch url {
-	case "yande.re":
-		return YandeReConfig
-	case "konachan.com":
-		return KonachanConfig
-	default:
-		return getmoe.Board{}
-	}
-}

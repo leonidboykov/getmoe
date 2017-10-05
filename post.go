@@ -11,12 +11,13 @@ import (
 
 // Post contains post data, represents intersection of *boorus post structs
 type Post struct {
-	ID        int         `json:"id"`
-	FileURL   string      `json:"file_url"`
-	FileSize  int         `json:"file_size"`
-	Width     int         `json:"width"`
-	Height    int         `json:"height"`
-	CreatedAt int         `json:"created_at"` // TODO: Snakaku Channel uses CreatedAt.S-unixtime
+	ID       int    `json:"id"`
+	FileURL  string `json:"file_url"`
+	FileSize int    `json:"file_size"`
+	Width    int    `json:"width"`
+	Height   int    `json:"height"`
+	// CreatedAt int         `json:"created_at"` // TODO: Snakaku Channel uses CreatedAt.S-unixtime
+	CreatedAt interface{} `json:"created_at"`
 	Author    string      `json:"author"`
 	Source    string      `json:"source"`
 	Rating    string      `json:"rating"`
