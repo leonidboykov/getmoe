@@ -25,7 +25,7 @@ var (
 			Host:   "danbooru.donmai.us",
 			Path:   "posts.json",
 		},
-		Limit:    200,
-		HasPages: true,
+		Limit:   200,
+		PageTag: "page",
 	}
 )

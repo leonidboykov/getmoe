@@ -15,11 +15,11 @@ import (
 // Board holds data for API access
 type Board struct {
 	URL          url.URL
-	HasPages     bool
 	PasswordSalt string
 	Limit        int
 	UserAgent    string
 	AppkeySalt   string
+	PageTag      string
 	Query
 }
 
@@ -53,10 +53,7 @@ func (c *Board) BuildRequest() url.URL {
 	q.Set("tags", t)
 	q.Set("limit", strconv.Itoa(c.Limit))
 
-	// Gelbooru has no pagination, but uses `page` tag for specifying api output
-	if c.HasPages {
-		q.Set("page", strconv.Itoa(c.Query.Page))
-	}
+	q.Set(c.PageTag, strconv.Itoa(c.Query.Page))
 
 	u.RawQuery = q.Encode()
 	return u
@@ -115,11 +112,6 @@ func (c *Board) RequestAll() ([]Post, error) {
 		}
 
 		pages = append(pages, page...)
-
-		// Gelbooru has no pagination, return after the first request
-		if !c.HasPages {
-			break
-		}
 
 		c.Query.Page++
 	}

@@ -27,7 +27,7 @@ var (
 		},
 		PasswordSalt: "choujin-steiner--%s--",
 		Limit:        1000,
-		HasPages:     true,
+		PageTag:      "page",
 	}
 	// KonachanConfig preconfigured config for konachan.com site
 	KonachanConfig = getmoe.Board{
@@ -38,6 +38,6 @@ var (
 		},
 		PasswordSalt: "So-I-Heard-You-Like-Mupkids-?--%s--",
 		Limit:        1000,
-		HasPages:     true,
+		PageTag:      "page",
 	}
 )

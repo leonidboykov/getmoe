@@ -26,7 +26,7 @@ var (
 			Path:     "index.php",
 			RawQuery: "page=dapi&s=post&q=index&json=1",
 		},
-		Limit:    1000,
-		HasPages: false,
+		Limit:   1000,
+		PageTag: "pid",
 	}
 )

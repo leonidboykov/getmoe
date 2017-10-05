@@ -33,7 +33,7 @@ var (
 		Limit:        100,
 		UserAgent:    "SCChannelApp/2.7 (Android; black)",
 		AppkeySalt:   "sankakuapp_%s_Z5NE9YASej",
-		HasPages:     true,
+		PageTag:      "page",
 	}
 	// IdolSankakuConfig preconfigured config for Sankaku Idol site
 	IdolSankakuConfig = getmoe.Board{
@@ -46,6 +46,6 @@ var (
 		Limit:        100,
 		UserAgent:    "SCChannelApp/2.7 (Android; idol)",
 		AppkeySalt:   "sankakuapp_%s_Z5NE9YASej",
-		HasPages:     true,
+		PageTag:      "page",
 	}
 )
