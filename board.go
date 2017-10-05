@@ -19,6 +19,7 @@ type Board struct {
 	Limit        int
 	UserAgent    string
 	AppkeySalt   string
+	PageTag      string
 	Query
 }
 
@@ -30,37 +31,40 @@ type Query struct {
 
 // BuildAuth creates query for auth
 func (c *Board) BuildAuth(login, password string) {
-	u := url.Values{}
-	u.Add("login", login)
-	u.Add("password_hash", Sha1(password, c.PasswordSalt))
+	q := c.URL.Query()
+	q.Set("login", login)
+	q.Set("password_hash", Sha1(password, c.PasswordSalt))
 
 	// if AppkeySalt is not empty (for Sankaku Channel)
 	if c.AppkeySalt != "" {
-		u.Add("appkey", Sha1(login, c.AppkeySalt))
+		q.Set("appkey", Sha1(login, c.AppkeySalt))
 	}
 
-	c.URL.RawQuery = u.Encode()
+	c.URL.RawQuery = q.Encode()
 }
 
-// BuildRequest ...
+// BuildRequest ...Set
 func (c *Board) BuildRequest() url.URL {
-	tempURL := c.URL
+	u := c.URL
 
-	u := tempURL.Query()
+	q := u.Query()
 
 	t := strings.Join(c.Query.Tags, " ")
-	u.Add("tags", t)
-	u.Add("limit", strconv.Itoa(c.Limit))
-	u.Add("page", strconv.Itoa(c.Query.Page))
+	q.Set("tags", t)
+	q.Set("limit", strconv.Itoa(c.Limit))
 
-	tempURL.RawQuery = u.Encode()
-	return tempURL
+	q.Set(c.PageTag, strconv.Itoa(c.Query.Page))
+
+	u.RawQuery = q.Encode()
+	return u
 }
 
 // Request gets images by tags
 func (c *Board) Request() ([]Post, error) {
 	// Remove Board reference from BuildTags
 	url := c.BuildRequest()
+
+	println(url.String())
 
 	// There is no point to create new http client every request
 	client := &http.Client{}
