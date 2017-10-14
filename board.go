@@ -64,8 +64,6 @@ func (c *Board) Request() ([]Post, error) {
 	// Remove Board reference from BuildTags
 	url := c.BuildRequest()
 
-	println(url.String())
-
 	// There is no point to create new http client every request
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url.String(), nil)

@@ -1,4 +1,4 @@
-# Get Moe [WIP]
+# Get Moe
 
 Get Moe &ndash; is a REST client for image boards, such as Moebooru and
 Danbooru. The goal of the project is to provide APIs for the most well-known
