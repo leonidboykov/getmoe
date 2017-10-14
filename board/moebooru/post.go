@@ -1,6 +1,7 @@
 package moebooru
 
 import (
+	"strings"
 	"time"
 )
 
@@ -57,4 +58,12 @@ type Post struct {
 		UserID    interface{} `json:"user_id"`
 		FlaggedBy string      `json:"flagged_by"`
 	} `json:"flag_detail"`
+}
+
+func (p *Post) parseTags() []string {
+	return strings.Split(p.Tags, " ")
+}
+
+func (p *Post) parseTime() time.Time {
+	return time.Unix(int64(p.CreatedAt), 0)
 }

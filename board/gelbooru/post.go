@@ -1,5 +1,10 @@
 package gelbooru
 
+import (
+	"strings"
+	"time"
+)
+
 // Post contains native Gelbooru data
 type Post struct {
 	Directory    string      `json:"directory"`
@@ -18,4 +23,12 @@ type Post struct {
 	Tags         string      `json:"tags"`
 	Width        int         `json:"width"`
 	FileURL      string      `json:"file_url"`
+}
+
+func (p *Post) parseTags() []string {
+	return strings.Split(p.Tags, " ")
+}
+
+func (p *Post) parseTime() time.Time {
+	return time.Unix(int64(p.Change), 0)
 }

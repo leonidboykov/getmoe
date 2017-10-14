@@ -1,9 +1,14 @@
 package danbooru
 
+import (
+	"strings"
+	"time"
+)
+
 // Post contains native Danbooru data
 type Post struct {
 	ID                  int         `json:"id"`
-	CreatedAt           string      `json:"created_at"`
+	CreatedAt           time.Time   `json:"created_at"`
 	UploaderID          int         `json:"uploader_id"`
 	Score               int         `json:"score"`
 	Source              string      `json:"source"`
@@ -52,4 +57,8 @@ type Post struct {
 	FileURL             string      `json:"file_url"`
 	LargeFileURL        string      `json:"large_file_url"`
 	PreviewFileURL      string      `json:"preview_file_url"`
+}
+
+func (p *Post) parseTags() []string {
+	return strings.Split(p.TagStringGeneral, " ")
 }

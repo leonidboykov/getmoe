@@ -12,13 +12,14 @@ Default configurations are available for the following websites
 package gelbooru
 
 import (
+	"encoding/json"
 	"net/url"
 
 	"github.com/leonidboykov/getmoe"
 )
 
 var (
-	// GelbooruConfig preconfigured config for Sankaku Channel site
+	// GelbooruConfig preconfigured config for Gelbooru site
 	GelbooruConfig = getmoe.Board{
 		URL: url.URL{
 			Scheme:   "https",
@@ -28,5 +29,31 @@ var (
 		},
 		Limit:   1000,
 		PageTag: "pid",
+		Parse:   parse,
 	}
 )
+
+func parse(data []byte) ([]getmoe.Post, error) {
+	var page []Post
+	if err := json.Unmarshal(data, &page); err != nil {
+		return nil, err
+	}
+
+	result := make([]getmoe.Post, len(page))
+
+	for i := range page {
+		result[i] = getmoe.Post{
+			ID:        page[i].ID,
+			FileURL:   page[i].FileURL,
+			Width:     page[i].Width,
+			Height:    page[i].Height,
+			CreatedAt: page[i].parseTime(),
+			Rating:    page[i].Rating,
+			Hash:      page[i].Hash,
+			Tags:      page[i].parseTags(),
+			Score:     page[i].Score,
+		}
+	}
+
+	return result, nil
+}
