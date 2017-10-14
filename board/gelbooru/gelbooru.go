@@ -41,17 +41,17 @@ func parse(data []byte) ([]getmoe.Post, error) {
 
 	result := make([]getmoe.Post, len(page))
 
-	for i, p := range page {
+	for i := range page {
 		result[i] = getmoe.Post{
-			ID:        p.ID,
-			FileURL:   p.FileURL,
-			Width:     p.Width,
-			Height:    p.Height,
-			CreatedAt: p.parseTime(),
-			Rating:    p.Rating,
-			Hash:      p.Hash,
-			Tags:      p.parseTags(),
-			Score:     p.Score,
+			ID:        page[i].ID,
+			FileURL:   page[i].FileURL,
+			Width:     page[i].Width,
+			Height:    page[i].Height,
+			CreatedAt: page[i].parseTime(),
+			Rating:    page[i].Rating,
+			Hash:      page[i].Hash,
+			Tags:      page[i].parseTags(),
+			Score:     page[i].Score,
 		}
 	}
 

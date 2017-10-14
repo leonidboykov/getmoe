@@ -26,6 +26,16 @@ type Post struct {
 	Score     int       `json:"score"`
 }
 
+// HasTag returns true if post has specified tag
+func (p *Post) HasTag(tag string) bool {
+	for i := range p.Tags {
+		if p.Tags[i] == tag {
+			return true
+		}
+	}
+	return false
+}
+
 // Save post to dir
 func (p *Post) Save(saveDir string) error {
 	// Getting the actual URL

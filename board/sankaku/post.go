@@ -48,8 +48,8 @@ type Post struct {
 
 func (p *Post) parseTags() []string {
 	result := make([]string, len(p.Tags))
-	for i, t := range p.Tags {
-		result[i] = t.Name
+	for i := range p.Tags {
+		result[i] = p.Tags[i].Name
 	}
 	return result
 }
