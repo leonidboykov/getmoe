@@ -1,10 +1,10 @@
 # Get Moe [WIP]
 
-Get Moe -- is a REST client for image boards, such as Moebooru and Danbooru. The
-goal of the project is to provide APIs for the most well-known image boards
-(boorus). This project started for the purpose of researching of various
-characters popularity, rather than image grabbing, however save feature is also
-available.
+Get Moe &ndash; is a REST client for image boards, such as Moebooru and
+Danbooru. The goal of the project is to provide APIs for the most well-known
+image boards (boorus). This project started for the purpose of researching of
+various characters popularity, rather than image grabbing, however save feature
+is also available.
 
 ## Supported Boards
 
