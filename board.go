@@ -3,7 +3,6 @@ package getmoe
 import (
 	"crypto/sha1"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -20,6 +19,7 @@ type Board struct {
 	UserAgent    string
 	AppkeySalt   string
 	PageTag      string
+	Parse        func(data []byte) ([]Post, error)
 	Query
 }
 
@@ -88,9 +88,8 @@ func (c *Board) Request() ([]Post, error) {
 		return []Post{}, err
 	}
 
-	// TODO: Provide API related reader
-	var page []Post
-	if err = json.Unmarshal(body, &page); err != nil {
+	page, err := c.Parse(body)
+	if err != nil {
 		return []Post{}, err
 	}
 
