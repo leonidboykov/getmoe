@@ -6,22 +6,24 @@ image boards (boorus). This project started for the purpose of researching of
 various characters popularity, rather than image grabbing, however save feature
 is also available.
 
+## Usage
+
+The only implemented command for now is `get`. Here is the usage example.
+
+    getmoe get --tags "tag1 tag2 rating:s" --from booru_name --to save/directory --as {image|json} -l login -p password
+
+Login and password are optional.
+
 ## Supported Boards
 
-Not all features are supported
+Custom boorus are not available yet.
 
-* [x] Moebooru
-* [x] Sankaku Channel
-* [x] Danbooru
-* [x] Gelbooru
-
-## Roadmap
-
-* Support more boards
-* Provide the most usable data from different boorus
-* Cli interface
-* Add save for images and/or search results
-* Implement full featured client for console ninjas
+* yande.re
+* konachan.com
+* gelbooru.com
+* danbooru.donmai.us
+* chan.sankakucomplex.com
+* idol.sankakucomplex.com
 
 ## License
 
