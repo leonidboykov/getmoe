@@ -37,7 +37,7 @@ func (c *Board) BuildAuth(login, password string) {
 
 	// if AppkeySalt is not empty (for Sankaku Channel)
 	if c.AppkeySalt != "" {
-		q.Set("appkey", Sha1(login, c.AppkeySalt))
+		q.Set("appkey", Sha1(strings.ToLower(login), c.AppkeySalt))
 	}
 
 	c.URL.RawQuery = q.Encode()

@@ -11,7 +11,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "getmoe"
 	app.Usage = "cli tool for boorus"
-	app.Version = "0.0.1"
+	app.Version = "0.1.0"
 	app.Authors = []cli.Author{
 		cli.Author{
 			Name:  "Leonid Boykov",
