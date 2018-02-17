@@ -16,14 +16,14 @@ Login and password are optional.
 
 ## Supported Boards
 
-Custom boorus are not available yet.
-
 * yande.re
 * konachan.com
 * gelbooru.com
 * danbooru.donmai.us
 * chan.sankakucomplex.com
 * idol.sankakucomplex.com
+
+Custom boorus are not available yet.
 
 ## License
 
