@@ -1,3 +1,7 @@
+### GoReleaser ###
+/dist
+
+
 # Created by https://www.gitignore.io/api/go,git,code,macos,linux,windows,sublimetext
 
 ### Code ###

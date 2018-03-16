@@ -7,11 +7,17 @@ import (
 	"github.com/urfave/cli"
 )
 
+var (
+	version = "master"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "getmoe"
 	app.Usage = "cli tool for boorus"
-	app.Version = "0.1.0"
+	app.Version = version
 	app.Authors = []cli.Author{
 		cli.Author{
 			Name:  "Leonid Boykov",
