@@ -10,6 +10,7 @@ matrix:
 
 install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  - dep ensure
 
 script:
   - go build ./cmd/getmoe
