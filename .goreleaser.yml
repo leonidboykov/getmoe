@@ -18,6 +18,7 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
+    - typo
     - Merge pull request
     - Merge branch
 archive:
