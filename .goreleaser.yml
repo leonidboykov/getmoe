@@ -1,6 +1,7 @@
 builds:
   - main: ./cmd/getmoe
     goarch:
+      - 386
       - amd64
     goos:
       - windows
@@ -8,6 +9,16 @@ builds:
       - linux
     env:
       - CGO_ENABLED=0
+checksum:
+  name_template: '{{ .ProjectName }}_checksums.txt'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+    - Merge pull request
+    - Merge branch
 archive:
   replacements:
     darwin: macOS
@@ -15,13 +26,13 @@ archive:
     windows: Windows
     386: i386
     amd64: x86_64
-checksum:
-  name_template: 'checksums.txt'
-snapshot:
-  name_template: SNAPSHOT-{{.Commit}}
-changelog:
-  sort: asc
-  filters:
-    exclude:
-    - '^docs:'
-    - '^test:'
+  format_overrides:
+    - goos: windows
+      format: zip
+scoop:
+  bucket:
+    owner:  leonidboykov
+    name: scoop-bucket
+  homepage: https://github.com/leonidboykov/getmoe
+  description: cli tool for boorus
+  license: MIT

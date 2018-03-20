@@ -1,0 +1,23 @@
+language: go
+go:
+  - "1.10.x"
+  - master
+
+matrix:
+  allow_failures:
+    - go: tip
+  fast_finish: true
+
+install:
+  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
+script:
+  - go build ./cmd/getmoe
+
+deploy:
+  - provider: script
+    skip-cleanup: true
+    script: curl -sL http://git.io/goreleaser | bash
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = linux
