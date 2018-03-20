@@ -1,12 +1,6 @@
 language: go
 go:
   - "1.10.x"
-  - master
-
-matrix:
-  allow_failures:
-    - go: tip
-  fast_finish: true
 
 install:
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
