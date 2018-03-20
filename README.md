@@ -1,5 +1,9 @@
 # Get Moe
 
+[![GoDoc](https://godoc.org/github.com/leonidboykov/getmoe?status.svg)](https://godoc.org/github.com/leonidboykov/getmoe)
+[![Build Status](https://travis-ci.org/leonidboykov/getmoe.svg?branch=master)](https://travis-ci.org/leonidboykov/getmoe)
+[![Go Report Card](https://goreportcard.com/badge/github.com/leonidboykov/getmoe)](https://goreportcard.com/report/github.com/leonidboykov/getmoe)
+
 Get Moe &ndash; is a REST client for image boards, such as Moebooru and
 Danbooru. The goal of the project is to provide APIs for the most well-known
 image boards (boorus). This project started for the purpose of researching of
