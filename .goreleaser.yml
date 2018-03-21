@@ -16,11 +16,11 @@ changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
-    - typo
-    - Merge pull request
-    - Merge branch
+      - '^docs:'
+      - '^test:'
+      - typo
+      - Merge pull request
+      - Merge branch
 archive:
   replacements:
     darwin: macOS
@@ -33,7 +33,7 @@ archive:
       format: zip
 scoop:
   bucket:
-    owner:  leonidboykov
+    owner: leonidboykov
     name: scoop-bucket
   homepage: https://github.com/leonidboykov/getmoe
   description: cli tool for boorus
