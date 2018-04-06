@@ -14,7 +14,7 @@ func TestSha1(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		v := Sha1(test.value, test.salt)
+		v := hashPassword(test.value, test.salt)
 		if v != test.result {
 			t.Error(
 				"For", test.value, "and", test.salt,
