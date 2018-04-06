@@ -14,18 +14,30 @@ is also available.
 
 The only implemented command for now is `get`. Here is the usage example.
 
-    getmoe get --tags "tag1 tag2 rating:s" --from booru_name --to save/directory --as {image|json} -l login -p password
+```console
+USAGE:
+   getmoe [global options] command [command options] [arguments...]
+
+COMMANDS:
+     get      get data from booru
+     help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --quiet, -q    disable progress bar
+   --help, -h     show help
+   --version, -v  print the version
+```
 
 Login and password are optional.
 
 ## Supported Boards
 
-* yande.re
-* konachan.com
-* gelbooru.com
-* danbooru.donmai.us
-* chan.sankakucomplex.com
-* idol.sankakucomplex.com
+  * yande.re
+  * konachan.com
+  * gelbooru.com
+  * danbooru.donmai.us
+  * chan.sankakucomplex.com
+  * idol.sankakucomplex.com
 
 Custom boorus are not available yet.
 
