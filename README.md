@@ -14,7 +14,7 @@ is also available.
 
 The only implemented command for now is `get`. Here is the usage example.
 
-```console
+```
 USAGE:
    getmoe [global options] command [command options] [arguments...]
 
