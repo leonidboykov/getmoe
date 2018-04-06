@@ -33,11 +33,11 @@ type Query struct {
 func (c *Board) BuildAuth(login, password string) {
 	q := c.URL.Query()
 	q.Set("login", login)
-	q.Set("password_hash", Sha1(password, c.PasswordSalt))
+	q.Set("password_hash", hashPassword(password, c.PasswordSalt))
 
 	// if AppkeySalt is not empty (for Sankaku Channel)
 	if c.AppkeySalt != "" {
-		q.Set("appkey", Sha1(strings.ToLower(login), c.AppkeySalt))
+		q.Set("appkey", hashPassword(strings.ToLower(login), c.AppkeySalt))
 	}
 
 	c.URL.RawQuery = q.Encode()
@@ -115,8 +115,8 @@ func (c *Board) RequestAll() ([]Post, error) {
 	return pages, nil
 }
 
-// Sha1 builds Sha1 hash with proper salt
-func Sha1(value, salt string) string {
+// hashPassword builds Sha1 hash with proper salt
+func hashPassword(value, salt string) string {
 	value = fmt.Sprintf(salt, value)
 	hash := sha1.New()
 	hash.Write([]byte(value))
