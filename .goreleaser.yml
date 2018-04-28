@@ -18,6 +18,7 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+      - '^chore:'
       - typo
       - Merge pull request
       - Merge branch
