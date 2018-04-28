@@ -33,3 +33,23 @@ func (c *ProviderConfiguration) UnmarshalJSON(data []byte) error {
 	c.Host = *u
 	return nil
 }
+
+// UnmarshalYAML implements custom JSON unmarshaler for parsing URL to string
+func (c *ProviderConfiguration) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	type Alias ProviderConfiguration
+	aux := &struct {
+		Host string `yaml:"host"`
+		*Alias
+	}{
+		Alias: (*Alias)(c),
+	}
+	if err := unmarshal(&aux); err != nil {
+		return err
+	}
+	u, err := url.Parse(aux.Host)
+	if err != nil {
+		return err
+	}
+	c.Host = *u
+	return nil
+}
