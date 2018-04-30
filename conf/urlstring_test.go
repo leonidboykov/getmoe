@@ -19,6 +19,7 @@ func TestUnmarshalYAML(t *testing.T) {
 		want conf.URLString `yaml:"host"`
 	}{
 		{"host: https://example.com", conf.URLString{URL: url.URL{Scheme: "https", Host: "example.com"}}},
+		{"", conf.URLString{URL: url.URL{}}},
 	}
 	for _, test := range tests {
 		var field TestURLString

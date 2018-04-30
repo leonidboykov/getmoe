@@ -15,7 +15,7 @@ func (f *URLString) UnmarshalYAML(unmashal func(interface{}) error) error {
 	}
 	u, err := url.Parse(s)
 	if err != nil {
-		return nil
+		return err
 	}
 	f.URL = *u
 	return nil
