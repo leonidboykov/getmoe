@@ -1,6 +1,8 @@
 ### Getmoe ###
 getmoe
 coverage.txt
+getmoe.yaml
+getmoe.yml
 
 ### GoReleaser ###
 /dist

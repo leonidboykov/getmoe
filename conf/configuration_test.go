@@ -24,7 +24,7 @@ providers:
 `)
 
 func TestProviders(t *testing.T) {
-	var config conf.AuthConfiguration
+	var config conf.GlobalConfiguration
 	if err := yaml.Unmarshal(testProviders, &config); err != nil {
 		t.Error(err)
 	}
