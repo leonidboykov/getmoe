@@ -1,19 +1,20 @@
 package getmoe
 
 import (
-	"crypto/sha1"
-	"encoding/hex"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/leonidboykov/getmoe/conf"
+	"github.com/leonidboykov/getmoe/internal/hash"
 )
 
 // Board holds data for API access
 type Board struct {
 	URL          url.URL
+	Provider     *Provider
 	PasswordSalt string
 	Limit        int
 	UserAgent    string
@@ -29,40 +30,60 @@ type Query struct {
 	Page int
 }
 
-// BuildAuth creates query for auth
-func (c *Board) BuildAuth(login, password string) {
-	q := c.URL.Query()
-	q.Set("login", login)
-	q.Set("password_hash", hashPassword(password, c.PasswordSalt))
-
-	// if AppkeySalt is not empty (for Sankaku Channel)
-	if c.AppkeySalt != "" {
-		q.Set("appkey", hashPassword(strings.ToLower(login), c.AppkeySalt))
+// NewBoard creates a new board
+func NewBoard(config conf.BoardConfiguration) (*Board, error) {
+	u, err := url.Parse(config.URL)
+	if err != nil {
+		return nil, err
 	}
 
-	c.URL.RawQuery = q.Encode()
+	// p, ok := provider.Providers[config.Provider]
+	// if !ok {
+	// 	return nil, fmt.Errorf("board: unable to use provider %s", config.Provider)
+	// }
+
+	board := &Board{
+		URL: *u,
+		// Provider: *p,
+	}
+
+	return board, nil
+}
+
+// BuildAuth creates query for auth
+func (b *Board) BuildAuth(login, password string) {
+	q := b.URL.Query()
+	q.Set("login", login)
+	q.Set("password_hash", hash.Sha1(password, b.PasswordSalt))
+
+	// if AppkeySalt is not empty (for Sankaku Channel)
+	if b.AppkeySalt != "" {
+		q.Set("appkey", hash.Sha1(strings.ToLower(login), b.AppkeySalt))
+	}
+
+	b.URL.RawQuery = q.Encode()
 }
 
 // BuildRequest ...Set
-func (c *Board) BuildRequest() url.URL {
-	u := c.URL
+func (b *Board) BuildRequest() url.URL {
+	u := b.URL
 
 	q := u.Query()
 
-	t := strings.Join(c.Query.Tags, " ")
+	t := strings.Join(b.Query.Tags, " ")
 	q.Set("tags", t)
-	q.Set("limit", strconv.Itoa(c.Limit))
+	q.Set("limit", strconv.Itoa(b.Limit))
 
-	q.Set(c.PageTag, strconv.Itoa(c.Query.Page))
+	q.Set(b.PageTag, strconv.Itoa(b.Query.Page))
 
 	u.RawQuery = q.Encode()
 	return u
 }
 
 // Request gets images by tags
-func (c *Board) Request() ([]Post, error) {
+func (b *Board) Request() ([]Post, error) {
 	// Remove Board reference from BuildTags
-	url := c.BuildRequest()
+	url := b.BuildRequest()
 
 	// There is no point to create new http client every request
 	client := &http.Client{}
@@ -71,8 +92,8 @@ func (c *Board) Request() ([]Post, error) {
 		return []Post{}, nil
 	}
 
-	if c.UserAgent != "" {
-		req.Header.Set("User-Agent", c.UserAgent)
+	if b.UserAgent != "" {
+		req.Header.Set("User-Agent", b.UserAgent)
 	}
 
 	resp, err := client.Do(req)
@@ -86,7 +107,7 @@ func (c *Board) Request() ([]Post, error) {
 		return []Post{}, err
 	}
 
-	page, err := c.Parse(body)
+	page, err := b.Parse(body)
 	if err != nil {
 		return []Post{}, err
 	}
@@ -95,11 +116,11 @@ func (c *Board) Request() ([]Post, error) {
 }
 
 // RequestAll checks all pages
-func (c *Board) RequestAll() ([]Post, error) {
+func (b *Board) RequestAll() ([]Post, error) {
 	var pages []Post
 
 	for {
-		page, err := c.Request()
+		page, err := b.Request()
 		if err != nil {
 			return pages, err
 		}
@@ -110,16 +131,7 @@ func (c *Board) RequestAll() ([]Post, error) {
 
 		pages = append(pages, page...)
 
-		c.Query.Page++
+		b.Query.Page++
 	}
 	return pages, nil
-}
-
-// hashPassword builds Sha1 hash with proper salt
-func hashPassword(value, salt string) string {
-	value = fmt.Sprintf(salt, value)
-	hash := sha1.New()
-	hash.Write([]byte(value))
-	sha1Hash := hex.EncodeToString(hash.Sum(nil))
-	return sha1Hash
 }

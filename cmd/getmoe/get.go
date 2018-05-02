@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/urfave/cli"
+
 	"github.com/leonidboykov/getmoe"
 	"github.com/leonidboykov/getmoe/board"
 	"github.com/leonidboykov/getmoe/utils"
-	"github.com/urfave/cli"
 )
 
 var getCommand = cli.Command{

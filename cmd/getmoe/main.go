@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/leonidboykov/getmoe/conf"
 	"github.com/urfave/cli"
+
+	"github.com/leonidboykov/getmoe/board"
+	"github.com/leonidboykov/getmoe/conf"
 )
 
 var (
@@ -26,7 +28,16 @@ func main() {
 		fmt.Println("Provider :", p.Provider)
 		fmt.Println("Login    :", p.Auth.Login)
 		fmt.Println("Password :", p.Auth.Password)
-		fmt.Println("Host     :", p.Host.String())
+		fmt.Println("URL     :", p.URL)
+		fmt.Println()
+
+		b, err := board.New(p)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		b.Provider.Auth(p.Auth, b.URL)
+		fmt.Println(b.URL.String())
 	}
 }
 

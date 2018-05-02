@@ -20,15 +20,17 @@ type AuthConfiguration struct {
 	Login          string `yaml:"login"`
 	Password       string `yaml:"password"`
 	HashedPassword string `yaml:"hashed_password"`
+	PasswordSalt   string `yaml:"password_salt"`
 }
 
 // BoardConfiguration holds provider related configuration
 type BoardConfiguration struct {
 	Name     string            `yaml:"name"`
 	Provider string            `yaml:"provider"`
-	Host     URLString         `yaml:"host"`
+	URL      string            `yaml:"url"`
 	Auth     AuthConfiguration `yaml:",inline"`
 	Headers  []Header          `yaml:"headers"`
+	// Host     URLString         `yaml:"host"`
 }
 
 // Header holds custom header for HTTP client
