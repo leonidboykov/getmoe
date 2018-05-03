@@ -1,14 +1,12 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
 	"github.com/urfave/cli"
 
 	"github.com/leonidboykov/getmoe"
-	"github.com/leonidboykov/getmoe/board"
 	"github.com/leonidboykov/getmoe/utils"
 )
 
@@ -46,46 +44,46 @@ var getCommand = cli.Command{
 }
 
 func getAction(ctx *cli.Context) error {
-	srcFlag := ctx.String("from")
-	dstFlag := ctx.String("to")
-	fmtFlag := ctx.String("as")
-	tagFlag := ctx.StringSlice("tags")
-	loginFlag := ctx.String("login")
-	passwordFlag := ctx.String("password")
-	quietFlag := ctx.GlobalBool("quiet")
+	// srcFlag := ctx.String("from")
+	// dstFlag := ctx.String("to")
+	// fmtFlag := ctx.String("as")
+	// tagFlag := ctx.StringSlice("tags")
+	// loginFlag := ctx.String("login")
+	// passwordFlag := ctx.String("password")
+	// quietFlag := ctx.GlobalBool("quiet")
 
-	board, ok := board.AvailableBoards[srcFlag]
-	if !ok {
-		fmt.Printf("There are no %s source specified\n", srcFlag)
-		os.Exit(1)
-	}
+	// board, ok := board.AvailableBoards[srcFlag]
+	// if !ok {
+	// 	fmt.Printf("There are no %s source specified\n", srcFlag)
+	// 	os.Exit(1)
+	// }
 
-	if loginFlag != "" && passwordFlag != "" {
-		board.BuildAuth(loginFlag, passwordFlag)
-	}
+	// if loginFlag != "" && passwordFlag != "" {
+	// 	board.BuildAuth(loginFlag, passwordFlag)
+	// }
 
-	board.Query = getmoe.Query{
-		Tags: tagFlag,
-		Page: 1,
-	}
+	// board.Query = getmoe.Query{
+	// 	Tags: tagFlag,
+	// 	Page: 1,
+	// }
 
-	if fmtFlag != "image" && fmtFlag != "json" {
-		return errors.New("Invalid '--as' flag value, only 'image' and 'json' are supported")
-	}
+	// if fmtFlag != "image" && fmtFlag != "json" {
+	// 	return errors.New("Invalid '--as' flag value, only 'image' and 'json' are supported")
+	// }
 
-	posts, err := board.RequestAll()
-	if err != nil {
-		fmt.Println(err)
-	}
+	// posts, err := board.RequestAll()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	switch fmtFlag {
-	case "image":
-		if err := saveImage(posts, dstFlag, quietFlag); err != nil {
-			return err
-		}
-	case "json":
-		fmt.Println(len(posts))
-	}
+	// switch fmtFlag {
+	// case "image":
+	// 	if err := saveImage(posts, dstFlag, quietFlag); err != nil {
+	// 		return err
+	// 	}
+	// case "json":
+	// 	fmt.Println(len(posts))
+	// }
 
 	return nil
 }

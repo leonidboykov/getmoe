@@ -13,37 +13,39 @@ package moebooru
 
 import (
 	"encoding/json"
-	"net/url"
 
 	"github.com/leonidboykov/getmoe"
 )
 
-var (
-	// YandeReConfig preconfigured config for yande.re site
-	YandeReConfig = getmoe.Board{
-		URL: url.URL{
-			Scheme: "https",
-			Host:   "yande.re",
-			Path:   "post.json",
-		},
-		PasswordSalt: "choujin-steiner--%s--",
-		Limit:        1000,
-		PageTag:      "page",
-		Parse:        parse,
-	}
-	// KonachanConfig preconfigured config for konachan.com site
-	KonachanConfig = getmoe.Board{
-		URL: url.URL{
-			Scheme: "https",
-			Host:   "konachan.com",
-			Path:   "post.json",
-		},
-		PasswordSalt: "So-I-Heard-You-Like-Mupkids-?--%s--",
-		Limit:        1000,
-		PageTag:      "page",
-		Parse:        parse,
-	}
-)
+// var (
+// 	// YandeReConfig preconfigured config for yande.re site
+// 	YandeReConfig = board.Board{
+// 		URL: &url.URL{
+// 			Scheme: "https",
+// 			Host:   "yande.re",
+// 			Path:   "post.json",
+// 		},
+// 		Provider: moebooru.Provider{
+// 			PasswordSalt:"choujin-steiner--%s--",
+// 		}
+// 		PasswordSalt: "choujin-steiner--%s--",
+// 		Limit:        1000,
+// 		PageTag:      "page",
+// 		Parse:        parse,
+// 	}
+// 	// KonachanConfig preconfigured config for konachan.com site
+// 	KonachanConfig = getmoe.Board{
+// 		URL: url.URL{
+// 			Scheme: "https",
+// 			Host:   "konachan.com",
+// 			Path:   "post.json",
+// 		},
+// 		PasswordSalt: "So-I-Heard-You-Like-Mupkids-?--%s--",
+// 		Limit:        1000,
+// 		PageTag:      "page",
+// 		Parse:        parse,
+// 	}
+// )
 
 func parse(data []byte) ([]getmoe.Post, error) {
 	var page []Post

@@ -32,10 +32,10 @@ type Query struct {
 
 // NewBoard creates a new board
 func NewBoard(config conf.BoardConfiguration) (*Board, error) {
-	u, err := url.Parse(config.URL)
-	if err != nil {
-		return nil, err
-	}
+	// u, err := url.Parse(config.URL)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	// p, ok := provider.Providers[config.Provider]
 	// if !ok {
@@ -43,7 +43,7 @@ func NewBoard(config conf.BoardConfiguration) (*Board, error) {
 	// }
 
 	board := &Board{
-		URL: *u,
+		// URL: *u,
 		// Provider: *p,
 	}
 

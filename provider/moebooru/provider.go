@@ -14,44 +14,87 @@ package moebooru
 import (
 	"net/url"
 
+	"github.com/imdario/mergo"
+
 	"github.com/leonidboykov/getmoe/conf"
 	"github.com/leonidboykov/getmoe/internal/hash"
+	"github.com/leonidboykov/getmoe/internal/query"
 )
 
 const (
 	defaultPasswordSalt = "choujin-steiner--%s--"
+	defaultPostsLimit   = 1000
 )
+
+const (
+	loginKey        = "login"
+	passwordHashKey = "password_hash"
+	pageKey         = "page"
+	tagsKey         = "tags"
+)
+
+var defaultProvider = &Provider{
+	URL: &url.URL{
+		Scheme: "https",
+		Path:   "post.json",
+	},
+	PasswordSalt: "choujin-steiner--%s--",
+	PostsLimit:   1000,
+}
 
 // Provider implements moebooru provider
 type Provider struct {
-	// Login          string
-	// Password       string
-	// HashedPassword string
-	// PasswordSalt   string
+	URL          *url.URL
+	PasswordSalt string
+	PostsLimit   int
 }
 
-// func New(config conf.BoardConfiguration) (*Provider, error) {
-
-// }
+// New creates a new moebooru provider with configuration
+func New(config conf.ProviderConfiguration) *Provider {
+	provider := &Provider{
+		URL:          &config.URL.URL,
+		PasswordSalt: config.PasswordSalt,
+		PostsLimit:   config.PostsLimit,
+	}
+	// Apply defaults
+	mergo.Merge(provider, defaultProvider)
+	// Authenticate if login/password have provided
+	provider.Auth(config.Auth)
+	return provider
+}
 
 // Auth builds query based on AuthConfiguration
-func (p *Provider) Auth(config conf.AuthConfiguration, u *url.URL) {
+func (p *Provider) Auth(config conf.AuthConfiguration) {
 	var login, password, hashedPassword = config.Login, config.Password, config.HashedPassword
-	var passwordSalt = config.PasswordSalt
-	if passwordSalt == "" {
-		passwordSalt = defaultPasswordSalt
-	}
-
-	q := u.Query()
+	q := p.URL.Query()
 	if login != "" {
-		q.Set("login", login)
+		q.Set(loginKey, login)
 	}
 	if hashedPassword == "" && password != "" {
-		hashedPassword = hash.Sha1(password, passwordSalt)
+		hashedPassword = hash.Sha1(password, p.PasswordSalt)
 	}
 	if hashedPassword != "" {
-		q.Set("password_hash", hashedPassword)
+		q.Set(passwordHashKey, hashedPassword)
 	}
+	p.URL.RawQuery = q.Encode()
+}
 
-	u.RawQuery = q.Encode()
+// BuildRequest builds query based on RequestConfiguration
+func (p *Provider) BuildRequest(config conf.RequestConfiguration) {
+	q := p.URL.Query()
+	query.Array(&q, "tags", config.Tags)
+	query.Int(&q, "limit", p.PostsLimit)
+	p.URL.RawQuery = q.Encode()
+}
+
+// NextPage ...
+func (p *Provider) NextPage() {
+	q := p.URL.Query()
+	query.Increment(&q, "page")
+	p.URL.RawQuery = q.Encode()
+}
+
+// Parse parses result from query
+func (p *Provider) Parse() {
+
 }

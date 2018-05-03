@@ -24,11 +24,11 @@ func main() {
 
 	for k, p := range config.Boards {
 		fmt.Println("Key      :", k)
-		fmt.Println("Name     :", p.Name)
-		fmt.Println("Provider :", p.Provider)
-		fmt.Println("Login    :", p.Auth.Login)
-		fmt.Println("Password :", p.Auth.Password)
-		fmt.Println("URL     :", p.URL)
+		// fmt.Println("Name     :", p.Name)
+		// fmt.Println("Provider :", p.Provider.Name)
+		// fmt.Println("Login    :", p.Auth.Login)
+		// fmt.Println("Password :", p.Auth.Password)
+		// fmt.Println("URL     :", p.URL)
 		fmt.Println()
 
 		b, err := board.New(p)
@@ -36,8 +36,8 @@ func main() {
 			fmt.Println(err)
 		}
 
-		b.Provider.Auth(p.Auth, b.URL)
-		fmt.Println(b.URL.String())
+		// b.Provider.Auth(p.Auth, b.URL)
+		fmt.Println(b.Provider)
 	}
 }
 
