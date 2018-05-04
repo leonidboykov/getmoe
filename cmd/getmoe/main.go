@@ -35,9 +35,19 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
+		b.Provider.BuildRequest(config.Download.Request)
+		pages, err := b.RequestAll()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println(b.Provider)
+		for _, p := range pages {
+			fmt.Println(p.FileURL)
+		}
+		fmt.Println(len(pages))
 
 		// b.Provider.Auth(p.Auth, b.URL)
-		fmt.Println(b.Provider)
 	}
 }
 

@@ -26,7 +26,6 @@ type BoardConfiguration struct {
 	// Auth     AuthConfiguration     `yaml:",inline"`
 
 	Provider ProviderConfiguration `yaml:",inline"`
-	Headers  map[string]string     `yaml:"headers"`
 }
 
 // ProviderConfiguration holds provider related configuration
@@ -34,6 +33,7 @@ type ProviderConfiguration struct {
 	Name         string            `yaml:"provider"`
 	URL          URLString         `yaml:"url"`
 	Auth         AuthConfiguration `yaml:",inline"`
+	Headers      map[string]string `yaml:"headers"`
 	PasswordSalt string            `yaml:"password_salt"`
 	AppkeySalt   string            `yaml:"appkey_salt"`
 	PostsLimit   int               `yaml:"posts_limit"`

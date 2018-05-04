@@ -12,7 +12,11 @@ Default configurations are available for the following websites
 package moebooru
 
 import (
+	"encoding/json"
+	"net/http"
 	"net/url"
+
+	"github.com/leonidboykov/getmoe"
 
 	"github.com/imdario/mergo"
 
@@ -45,6 +49,7 @@ var defaultProvider = &Provider{
 // Provider implements moebooru provider
 type Provider struct {
 	URL          *url.URL
+	Headers      map[string]string
 	PasswordSalt string
 	PostsLimit   int
 }
@@ -53,6 +58,7 @@ type Provider struct {
 func New(config conf.ProviderConfiguration) *Provider {
 	provider := &Provider{
 		URL:          &config.URL.URL,
+		Headers:      config.Headers,
 		PasswordSalt: config.PasswordSalt,
 		PostsLimit:   config.PostsLimit,
 	}
@@ -87,14 +93,48 @@ func (p *Provider) BuildRequest(config conf.RequestConfiguration) {
 	p.URL.RawQuery = q.Encode()
 }
 
-// NextPage ...
+// NextPage increments page by 1
 func (p *Provider) NextPage() {
 	q := p.URL.Query()
 	query.Increment(&q, "page")
 	p.URL.RawQuery = q.Encode()
 }
 
-// Parse parses result from query
-func (p *Provider) Parse() {
+// PageRequest builds page request from URL
+func (p *Provider) PageRequest() (*http.Request, error) {
+	req, err := http.NewRequest("GET", p.URL.String(), nil)
+	if err != nil {
+		return req, err
+	}
+	// Set headers if provided
+	for k, v := range p.Headers {
+		req.Header.Set(k, v)
+	}
+	return req, err
+}
 
+// Parse parses result from query
+func (p *Provider) Parse(data []byte) ([]getmoe.Post, error) {
+	var page []Post
+	if err := json.Unmarshal(data, &page); err != nil {
+		return nil, err
+	}
+	result := make([]getmoe.Post, len(page))
+	for i := range page {
+		result[i] = getmoe.Post{
+			ID:        page[i].ID,
+			FileURL:   page[i].FileURL,
+			FileSize:  page[i].FileSize,
+			Width:     page[i].Width,
+			Height:    page[i].Height,
+			CreatedAt: page[i].parseTime(),
+			Author:    page[i].Author,
+			Source:    page[i].Source,
+			Rating:    page[i].Rating,
+			Hash:      page[i].Md5,
+			Tags:      page[i].parseTags(),
+			Score:     page[i].Score,
+		}
+	}
+	return result, nil
 }
