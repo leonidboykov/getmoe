@@ -2,14 +2,26 @@
 
 
 [[projects]]
+  name = "github.com/imdario/mergo"
+  packages = ["."]
+  revision = "9d5f1277e9a8ed20c3684bda8fde67c05628518c"
+  version = "v0.3.4"
+
+[[projects]]
   name = "github.com/urfave/cli"
   packages = ["."]
   revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
   version = "v1.20.0"
 
+[[projects]]
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "dc31bf18b10af3b28727eb5be721811713c44bfc4ac5f49047e4ce7829f998a2"
+  inputs-digest = "d02bf2a7388ea771de3e00befdae1616d262a67dffe614a5fc1e347803af4f55"
   solver-name = "gps-cdcl"
   solver-version = 1

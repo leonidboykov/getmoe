@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -9,6 +8,7 @@ import (
 
 	"github.com/leonidboykov/getmoe"
 	"github.com/leonidboykov/getmoe/board"
+	"github.com/leonidboykov/getmoe/conf"
 	"github.com/leonidboykov/getmoe/utils"
 )
 
@@ -24,11 +24,6 @@ var getCommand = cli.Command{
 		cli.StringFlag{
 			Name:  "to",
 			Usage: "destination folder",
-		},
-		cli.StringFlag{
-			Name:  "as",
-			Usage: "save format [image|json]",
-			Value: "image",
 		},
 		cli.StringSliceFlag{
 			Name:  "tags",
@@ -48,7 +43,6 @@ var getCommand = cli.Command{
 func getAction(ctx *cli.Context) error {
 	srcFlag := ctx.String("from")
 	dstFlag := ctx.String("to")
-	fmtFlag := ctx.String("as")
 	tagFlag := ctx.StringSlice("tags")
 	loginFlag := ctx.String("login")
 	passwordFlag := ctx.String("password")
@@ -60,34 +54,21 @@ func getAction(ctx *cli.Context) error {
 		os.Exit(1)
 	}
 
-	if loginFlag != "" && passwordFlag != "" {
-		board.BuildAuth(loginFlag, passwordFlag)
-	}
+	board.Provider.Auth(conf.AuthConfiguration{
+		Login:    loginFlag,
+		Password: passwordFlag,
+	})
 
-	board.Query = getmoe.Query{
+	board.Provider.BuildRequest(conf.RequestConfiguration{
 		Tags: tagFlag,
-		Page: 1,
-	}
-
-	if fmtFlag != "image" && fmtFlag != "json" {
-		return errors.New("Invalid '--as' flag value, only 'image' and 'json' are supported")
-	}
+	})
 
 	posts, err := board.RequestAll()
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	switch fmtFlag {
-	case "image":
-		if err := saveImage(posts, dstFlag, quietFlag); err != nil {
-			return err
-		}
-	case "json":
-		fmt.Println(len(posts))
-	}
-
-	return nil
+	return saveImage(posts, dstFlag, quietFlag)
 }
 
 func saveImage(posts []getmoe.Post, saveDir string, quiet bool) error {
@@ -102,6 +83,5 @@ func saveImage(posts []getmoe.Post, saveDir string, quiet bool) error {
 			fmt.Println("Getting", fName[:32], "...")
 		}
 	}
-
 	return nil
 }
