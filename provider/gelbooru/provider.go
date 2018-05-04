@@ -1,10 +1,8 @@
 /*
-Package moebooru implements a simple library for accessing Moebooru-based image
+Package gelbooru implements a simple library for accessing Gelbooru-based image
 boards.
-
-Source code of Moebooru is available at https://github.com/moebooru/moebooru
 */
-package moebooru
+package gelbooru
 
 import (
 	"encoding/json"
@@ -15,7 +13,6 @@ import (
 
 	"github.com/leonidboykov/getmoe"
 	"github.com/leonidboykov/getmoe/conf"
-	"github.com/leonidboykov/getmoe/internal/hash"
 	"github.com/leonidboykov/getmoe/internal/query"
 )
 
@@ -27,14 +24,15 @@ const (
 const (
 	loginKey        = "login"
 	passwordHashKey = "password_hash"
-	pageKey         = "page"
+	pageKey         = "pid"
 	tagsKey         = "tags"
 )
 
 var defaultProvider = &Provider{
 	URL: &url.URL{
-		Scheme: "https",
-		Path:   "post.json",
+		Scheme:   "https",
+		Path:     "index.php",
+		RawQuery: "page=dapi&s=post&q=index&json=1",
 	},
 	PasswordSalt: "choujin-steiner--%s--",
 	PostsLimit:   1000,
@@ -63,18 +61,7 @@ func New(config conf.ProviderConfiguration) *Provider {
 
 // Auth builds query based on AuthConfiguration
 func (p *Provider) Auth(config conf.AuthConfiguration) {
-	var login, password, hashedPassword = config.Login, config.Password, config.HashedPassword
-	q := p.URL.Query()
-	if login != "" {
-		q.Set(loginKey, login)
-	}
-	if hashedPassword == "" && password != "" {
-		hashedPassword = hash.Sha1(password, p.PasswordSalt)
-	}
-	if hashedPassword != "" {
-		q.Set(passwordHashKey, hashedPassword)
-	}
-	p.URL.RawQuery = q.Encode()
+	// No auth required
 }
 
 // BuildRequest builds query based on RequestConfiguration
@@ -112,14 +99,11 @@ func (p *Provider) Parse(data []byte) ([]getmoe.Post, error) {
 		result[i] = getmoe.Post{
 			ID:        page[i].ID,
 			FileURL:   page[i].FileURL,
-			FileSize:  page[i].FileSize,
 			Width:     page[i].Width,
 			Height:    page[i].Height,
 			CreatedAt: page[i].parseTime(),
-			Author:    page[i].Author,
-			Source:    page[i].Source,
 			Rating:    page[i].Rating,
-			Hash:      page[i].Md5,
+			Hash:      page[i].Hash,
 			Tags:      page[i].parseTags(),
 			Score:     page[i].Score,
 		}

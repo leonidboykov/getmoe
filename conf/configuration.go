@@ -17,14 +17,11 @@ type AuthConfiguration struct {
 	Login          string `yaml:"login"`
 	Password       string `yaml:"password"`
 	HashedPassword string `yaml:"hashed_password"`
+	APIKey         string `yaml:"api_key"`
 }
 
 // BoardConfiguration holds board related configuration
 type BoardConfiguration struct {
-	// Name string `yaml:"name"`
-	// URL  string `yaml:"url"`
-	// Auth     AuthConfiguration     `yaml:",inline"`
-
 	Provider ProviderConfiguration `yaml:",inline"`
 }
 
@@ -33,7 +30,6 @@ type ProviderConfiguration struct {
 	Name         string            `yaml:"provider"`
 	URL          URLString         `yaml:"url"`
 	Auth         AuthConfiguration `yaml:",inline"`
-	Headers      map[string]string `yaml:"headers"`
 	PasswordSalt string            `yaml:"password_salt"`
 	AppkeySalt   string            `yaml:"appkey_salt"`
 	PostsLimit   int               `yaml:"posts_limit"`

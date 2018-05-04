@@ -14,16 +14,12 @@ func Increment(q *url.Values, key string) error {
 		q.Set(key, "1")
 		return nil
 	}
-
 	value, err := strconv.Atoi(strValue)
 	if err != nil {
 		return err
 	}
-
 	value++
-
 	q.Set(key, strconv.Itoa(value))
-
 	return nil
 }
 

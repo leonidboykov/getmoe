@@ -1,15 +1,15 @@
 /*
-Package moebooru implements a simple library for accessing Moebooru-based image
-boards.
-
-Source code of Moebooru is available at https://github.com/moebooru/moebooru
+Package sankaku implements a simple library for accessing Sankakucomplex-based
+image boards.
 */
-package moebooru
+package sankaku
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/imdario/mergo"
 
@@ -21,12 +21,13 @@ import (
 
 const (
 	defaultPasswordSalt = "choujin-steiner--%s--"
-	defaultPostsLimit   = 1000
+	defaultPostsLimit   = 100
 )
 
 const (
 	loginKey        = "login"
 	passwordHashKey = "password_hash"
+	appkeyKey       = "appkey"
 	pageKey         = "page"
 	tagsKey         = "tags"
 )
@@ -34,16 +35,18 @@ const (
 var defaultProvider = &Provider{
 	URL: &url.URL{
 		Scheme: "https",
-		Path:   "post.json",
+		Path:   "post/index.json",
 	},
 	PasswordSalt: "choujin-steiner--%s--",
-	PostsLimit:   1000,
+	AppkeySalt:   "sankakuapp_%s_Z5NE9YASej",
+	PostsLimit:   100,
 }
 
 // Provider implements moebooru provider
 type Provider struct {
 	URL          *url.URL
 	PasswordSalt string
+	AppkeySalt   string
 	PostsLimit   int
 }
 
@@ -66,7 +69,9 @@ func (p *Provider) Auth(config conf.AuthConfiguration) {
 	var login, password, hashedPassword = config.Login, config.Password, config.HashedPassword
 	q := p.URL.Query()
 	if login != "" {
+		appKey := hash.Sha1(strings.ToLower(login), p.AppkeySalt)
 		q.Set(loginKey, login)
+		q.Set(appkeyKey, appKey)
 	}
 	if hashedPassword == "" && password != "" {
 		hashedPassword = hash.Sha1(password, p.PasswordSalt)
@@ -105,6 +110,8 @@ func (p *Provider) PageRequest() (*http.Request, error) {
 func (p *Provider) Parse(data []byte) ([]getmoe.Post, error) {
 	var page []Post
 	if err := json.Unmarshal(data, &page); err != nil {
+		fmt.Println(p.URL.String())
+		fmt.Println(string(data))
 		return nil, err
 	}
 	result := make([]getmoe.Post, len(page))
@@ -121,7 +128,7 @@ func (p *Provider) Parse(data []byte) ([]getmoe.Post, error) {
 			Rating:    page[i].Rating,
 			Hash:      page[i].Md5,
 			Tags:      page[i].parseTags(),
-			Score:     page[i].Score,
+			Score:     page[i].TotalScore,
 		}
 	}
 	return result, nil

@@ -32,7 +32,7 @@ func New(config conf.BoardConfiguration) (*Board, error) {
 	}
 	p, ok := provider.Providers[config.Provider.Name]
 	if !ok {
-		return nil, fmt.Errorf(ErrProviderNotFound, config.Provider)
+		return nil, fmt.Errorf(ErrProviderNotFound, config.Provider.Name)
 	}
 
 	board := &Board{
@@ -76,6 +76,7 @@ func (b *Board) Request() ([]getmoe.Post, error) {
 func (b *Board) RequestAll() ([]getmoe.Post, error) {
 	var pages []getmoe.Post
 	for {
+		b.Provider.NextPage()
 		page, err := b.Request()
 		if err != nil {
 			return pages, err
@@ -84,7 +85,6 @@ func (b *Board) RequestAll() ([]getmoe.Post, error) {
 			break
 		}
 		pages = append(pages, page...)
-		b.Provider.NextPage()
 	}
 	return pages, nil
 }

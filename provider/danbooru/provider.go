@@ -1,10 +1,10 @@
 /*
-Package moebooru implements a simple library for accessing Moebooru-based image
+Package danbooru implements a simple library for accessing Danbooru-based image
 boards.
 
-Source code of Moebooru is available at https://github.com/moebooru/moebooru
+Source code of Danbooru is available at https://github.com/r888888888/danbooru
 */
-package moebooru
+package danbooru
 
 import (
 	"encoding/json"
@@ -15,7 +15,6 @@ import (
 
 	"github.com/leonidboykov/getmoe"
 	"github.com/leonidboykov/getmoe/conf"
-	"github.com/leonidboykov/getmoe/internal/hash"
 	"github.com/leonidboykov/getmoe/internal/query"
 )
 
@@ -25,19 +24,17 @@ const (
 )
 
 const (
-	loginKey        = "login"
-	passwordHashKey = "password_hash"
-	pageKey         = "page"
-	tagsKey         = "tags"
+	pageKey = "page"
+	tagsKey = "tags"
 )
 
 var defaultProvider = &Provider{
 	URL: &url.URL{
 		Scheme: "https",
-		Path:   "post.json",
+		Path:   "posts.json",
 	},
 	PasswordSalt: "choujin-steiner--%s--",
-	PostsLimit:   1000,
+	PostsLimit:   200,
 }
 
 // Provider implements moebooru provider
@@ -63,18 +60,7 @@ func New(config conf.ProviderConfiguration) *Provider {
 
 // Auth builds query based on AuthConfiguration
 func (p *Provider) Auth(config conf.AuthConfiguration) {
-	var login, password, hashedPassword = config.Login, config.Password, config.HashedPassword
-	q := p.URL.Query()
-	if login != "" {
-		q.Set(loginKey, login)
-	}
-	if hashedPassword == "" && password != "" {
-		hashedPassword = hash.Sha1(password, p.PasswordSalt)
-	}
-	if hashedPassword != "" {
-		q.Set(passwordHashKey, hashedPassword)
-	}
-	p.URL.RawQuery = q.Encode()
+	p.URL.User = url.UserPassword(config.Login, config.APIKey)
 }
 
 // BuildRequest builds query based on RequestConfiguration
@@ -113,10 +99,10 @@ func (p *Provider) Parse(data []byte) ([]getmoe.Post, error) {
 			ID:        page[i].ID,
 			FileURL:   page[i].FileURL,
 			FileSize:  page[i].FileSize,
-			Width:     page[i].Width,
-			Height:    page[i].Height,
-			CreatedAt: page[i].parseTime(),
-			Author:    page[i].Author,
+			Width:     page[i].ImageWidth,
+			Height:    page[i].ImageHeight,
+			CreatedAt: page[i].CreatedAt,
+			Author:    page[i].TagStringArtist,
 			Source:    page[i].Source,
 			Rating:    page[i].Rating,
 			Hash:      page[i].Md5,
