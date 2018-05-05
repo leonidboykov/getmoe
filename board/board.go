@@ -36,7 +36,6 @@ func New(config conf.BoardConfiguration) (*Board, error) {
 	}
 
 	board := &Board{
-		// URL:      u,
 		Provider: p(config.Provider),
 		httpClient: &http.Client{
 			Timeout: 30 * time.Second,
