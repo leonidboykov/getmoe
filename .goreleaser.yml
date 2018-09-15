@@ -40,7 +40,7 @@ brew:
   homepage: https://github.com/leonidboykov/getmoe
   description: cli tool for boorus
   test: |
-    system "#{bin}/getmoe -v" # TODO: Replace with an actual test
+    system "#{bin}/getmoe -v"
 scoop:
   bucket:
     owner: leonidboykov
