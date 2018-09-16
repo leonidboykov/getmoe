@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/leonidboykov/getmoe.svg?branch=master)](https://travis-ci.org/leonidboykov/getmoe)
 [![codecov](https://codecov.io/gh/leonidboykov/getmoe/branch/master/graph/badge.svg)](https://codecov.io/gh/leonidboykov/getmoe)
 [![Go Report Card](https://goreportcard.com/badge/github.com/leonidboykov/getmoe)](https://goreportcard.com/report/github.com/leonidboykov/getmoe)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=leonidboykov/getmoe)](https://dependabot.com)
 
 Get Moe &ndash; is a REST client for image boards, such as Moebooru and
 Danbooru. The goal of the project is to provide APIs for the most well-known
