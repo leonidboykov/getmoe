@@ -50,7 +50,7 @@ func getAction(ctx *cli.Context) error {
 
 	board, ok := board.AvailableBoards[srcFlag]
 	if !ok {
-		fmt.Printf("There are no %s source specified\n", srcFlag)
+		fmt.Printf("There is no %s source specified\n", srcFlag)
 		os.Exit(1)
 	}
 
