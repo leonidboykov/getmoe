@@ -5,13 +5,6 @@ import (
 	"time"
 )
 
-// Tags interface provides a generic interface for the
-// type Tags interface {
-// 	With(t string) *Tag
-// 	AfterDate(t time.Time) *Tag
-// 	BeforeDate(t time.Time) *Tag
-// }
-
 const (
 	orPrefix = "~"
 	noPrefix = "-"
@@ -29,31 +22,24 @@ const (
 
 const timeFormat = "2006-01-02"
 
-// Rating defines boorus rating system
-type Rating string
-
-// Boorus rating system has safe, questionable and explicit tags
-const (
-	RatingSafe         Rating = "s"
-	RatingQuestionable        = "q"
-	RatingExplicit            = "e"
-)
-
-// Tags ...
+// Tags provides fluent-style builder for boorus tags.
 type Tags []string
 
-// NewTags ...
+// NewTags allocates a new list. You may provide as many tags as you want.
+//  t := getmoe.NewTags("tag1", "tag2")
 func NewTags(tags ...string) *Tags {
 	return new(Tags).And(tags...)
 }
 
-// And ...
+// And appends tags to tag list.
+//  t.And("tag3", "tag4")
 func (t *Tags) And(tags ...string) *Tags {
 	*t = append(*t, tags...)
 	return t
 }
 
-// Or ...
+// Or appends tags with 'or' prefix to tag list.
+// t.Or("tag5", "tag6")
 func (t *Tags) Or(tags ...string) *Tags {
 	for i := range tags {
 		*t = append(*t, orPrefix+tags[i])
@@ -61,7 +47,7 @@ func (t *Tags) Or(tags ...string) *Tags {
 	return t
 }
 
-// No ...
+// No appends tags with 'no' prefix to tag list.
 func (t *Tags) No(tags ...string) *Tags {
 	for i := range tags {
 		*t = append(*t, noPrefix+tags[i])
@@ -69,31 +55,35 @@ func (t *Tags) No(tags ...string) *Tags {
 	return t
 }
 
-// HasRating appends rating tag
-func (t *Tags) HasRating(r Rating) *Tags {
-	*t = append(*t, ratingKey+string(r))
+// WithRating appends rating tags.
+func (t *Tags) WithRating(r ...Rating) *Tags {
+	for i := range r {
+		*t = append(*t, ratingKey+string(r[i]))
+	}
 	return t
 }
 
-// HasNotRating appends rating tag with a minus prefix
-func (t *Tags) HasNotRating(r Rating) *Tags {
-	*t = append(*t, noPrefix+ratingKey+string(r))
+// WithoutRating appends rating tags with 'no' prefix.
+func (t *Tags) WithoutRating(r ...Rating) *Tags {
+	for i := range r {
+		*t = append(*t, noPrefix+ratingKey+string(r[i]))
+	}
 	return t
 }
 
-// AtDate ...
+// AtDate appends date tag.
 func (t *Tags) AtDate(date time.Time) *Tags {
 	*t = append(*t, dateKey+date.Format(timeFormat))
 	return t
 }
 
-// BeforeDate ...
+// BeforeDate appends date tag with before prefix.
 func (t *Tags) BeforeDate(date time.Time) *Tags {
 	*t = append(*t, dateKey+lessOrEqualPrefix+date.Format(timeFormat))
 	return t
 }
 
-// AfterDate ...
+// AfterDate appends date tag with after prefix.
 func (t *Tags) AfterDate(date time.Time) *Tags {
 	*t = append(*t, dateKey+greaterOrEqualPrefix+date.Format(timeFormat))
 	return t

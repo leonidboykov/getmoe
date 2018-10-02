@@ -14,7 +14,6 @@ import (
 	"github.com/imdario/mergo"
 
 	"github.com/leonidboykov/getmoe"
-	"github.com/leonidboykov/getmoe/conf"
 	"github.com/leonidboykov/getmoe/internal/hash"
 	"github.com/leonidboykov/getmoe/internal/query"
 )
@@ -48,7 +47,7 @@ type Provider struct {
 }
 
 // New creates a new moebooru provider with configuration
-func New(config conf.ProviderConfiguration) *Provider {
+func New(config getmoe.ProviderConfiguration) *Provider {
 	provider := &Provider{
 		URL:          &config.URL.URL,
 		PasswordSalt: config.PasswordSalt,
@@ -62,7 +61,7 @@ func New(config conf.ProviderConfiguration) *Provider {
 }
 
 // Auth builds query based on AuthConfiguration
-func (p *Provider) Auth(config conf.AuthConfiguration) {
+func (p *Provider) Auth(config getmoe.AuthConfiguration) {
 	var login, password, hashedPassword = config.Login, config.Password, config.HashedPassword
 	q := p.URL.Query()
 	if login != "" {
@@ -78,7 +77,7 @@ func (p *Provider) Auth(config conf.AuthConfiguration) {
 }
 
 // BuildRequest builds query based on RequestConfiguration
-func (p *Provider) BuildRequest(config conf.RequestConfiguration) {
+func (p *Provider) BuildRequest(config getmoe.RequestConfiguration) {
 	q := p.URL.Query()
 	query.Array(&q, "tags", config.Tags)
 	query.Int(&q, "limit", p.PostsLimit)

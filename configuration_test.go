@@ -1,11 +1,11 @@
-package conf_test
+package getmoe_test
 
 import (
 	"testing"
 
 	"gopkg.in/yaml.v2"
 
-	"github.com/leonidboykov/getmoe/conf"
+	"github.com/leonidboykov/getmoe"
 )
 
 var testProviders = []byte(`
@@ -24,7 +24,7 @@ providers:
 `)
 
 func TestProviders(t *testing.T) {
-	var config conf.GlobalConfiguration
+	var config getmoe.GlobalConfiguration
 	if err := yaml.Unmarshal(testProviders, &config); err != nil {
 		t.Error(err)
 	}

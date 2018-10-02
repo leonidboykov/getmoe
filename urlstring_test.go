@@ -1,4 +1,4 @@
-package conf_test
+package getmoe_test
 
 import (
 	"net/url"
@@ -6,20 +6,20 @@ import (
 
 	"gopkg.in/yaml.v2"
 
-	"github.com/leonidboykov/getmoe/conf"
+	"github.com/leonidboykov/getmoe"
 )
 
 type TestURLString struct {
-	Host conf.URLString `yaml:"host"`
+	Host getmoe.URLString `yaml:"host"`
 }
 
 func TestUnmarshalYAML(t *testing.T) {
 	tests := []struct {
 		in   string
-		want conf.URLString `yaml:"host"`
+		want getmoe.URLString `yaml:"host"`
 	}{
-		{"host: https://example.com", conf.URLString{URL: url.URL{Scheme: "https", Host: "example.com"}}},
-		{"", conf.URLString{URL: url.URL{}}},
+		{"host: https://example.com", getmoe.URLString{URL: url.URL{Scheme: "https", Host: "example.com"}}},
+		{"", getmoe.URLString{URL: url.URL{}}},
 	}
 	for _, test := range tests {
 		var field TestURLString

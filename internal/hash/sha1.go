@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-// Sha1 builds Sha1 hash with proper salt
+// Sha1 builds sha1 hash with proper salt
 func Sha1(value, salt string) string {
 	value = fmt.Sprintf(salt, value)
 	hash := sha1.New()

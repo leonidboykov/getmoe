@@ -1,4 +1,4 @@
-package conf
+package getmoe
 
 import "net/url"
 

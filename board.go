@@ -1,15 +1,10 @@
-package board
+package getmoe
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
-
-	"github.com/leonidboykov/getmoe"
-	"github.com/leonidboykov/getmoe/conf"
-	"github.com/leonidboykov/getmoe/provider"
 )
 
 // Board related errors
@@ -21,32 +16,31 @@ var (
 
 // Board holds data for API access
 type Board struct {
-	Provider   getmoe.Provider
+	Provider   Provider
 	httpClient *http.Client
 }
 
-// New creates a new Board with provided configuration
-func New(config conf.BoardConfiguration) (*Board, error) {
-	if config.Provider.Name == "" {
-		return nil, ErrProviderNotSpecified
-	}
-	p, ok := provider.Providers[config.Provider.Name]
-	if !ok {
-		return nil, fmt.Errorf(ErrProviderNotFound, config.Provider.Name)
-	}
+// NewBoard creates a new board with provided configuration
+func NewBoard(provider Provider) *Board {
+	// func New(config getmoe.BoardConfiguration) (*Board, error) {
+	// if config.Provider.Name == "" {
+	// 	return nil, ErrProviderNotSpecified
+	// }
+	// p, ok := provider.Providers[config.Provider.Name]
+	// if !ok {
+	// 	return nil, fmt.Errorf(ErrProviderNotFound, config.Provider.Name)
+	// }
 
-	board := &Board{
-		Provider: p(config.Provider),
+	return &Board{
+		Provider: provider,
 		httpClient: &http.Client{
 			Timeout: 30 * time.Second,
 		},
 	}
-
-	return board, nil
 }
 
 // Request gets images by tags
-func (b *Board) Request() ([]getmoe.Post, error) {
+func (b *Board) Request() ([]Post, error) {
 	req, err := b.Provider.PageRequest()
 	if err != nil {
 		return nil, err
@@ -72,8 +66,8 @@ func (b *Board) Request() ([]getmoe.Post, error) {
 }
 
 // RequestAll checks all pages
-func (b *Board) RequestAll() ([]getmoe.Post, error) {
-	var pages []getmoe.Post
+func (b *Board) RequestAll() ([]Post, error) {
+	var pages []Post
 	for {
 		b.Provider.NextPage()
 		page, err := b.Request()

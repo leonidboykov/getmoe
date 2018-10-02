@@ -7,9 +7,8 @@ import (
 	"github.com/urfave/cli"
 
 	"github.com/leonidboykov/getmoe"
-	"github.com/leonidboykov/getmoe/board"
-	"github.com/leonidboykov/getmoe/conf"
-	"github.com/leonidboykov/getmoe/utils"
+	"github.com/leonidboykov/getmoe/internal/helper"
+	"github.com/leonidboykov/getmoe/provider"
 )
 
 var getCommand = cli.Command{
@@ -48,18 +47,18 @@ func getAction(ctx *cli.Context) error {
 	passwordFlag := ctx.String("password")
 	quietFlag := ctx.GlobalBool("quiet")
 
-	board, ok := board.AvailableBoards[srcFlag]
+	board, ok := provider.AvailableBoards[srcFlag]
 	if !ok {
 		fmt.Printf("There is no %s source specified\n", srcFlag)
 		os.Exit(1)
 	}
 
-	board.Provider.Auth(conf.AuthConfiguration{
+	board.Provider.Auth(getmoe.AuthConfiguration{
 		Login:    loginFlag,
 		Password: passwordFlag,
 	})
 
-	board.Provider.BuildRequest(conf.RequestConfiguration{
+	board.Provider.BuildRequest(getmoe.RequestConfiguration{
 		Tags: tagFlag,
 	})
 
