@@ -45,4 +45,4 @@ Custom boorus are not available yet.
 
 ## License
 
-getmoe is free software licensed under the [MIT](LICENSE) license.
+getmoe is a free software licensed under the [MIT](LICENSE) license.
