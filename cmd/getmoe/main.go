@@ -18,12 +18,10 @@ func main() {
 	app.Name = "getmoe"
 	app.Usage = "cli tool for boorus"
 	app.Version = version
-	app.Authors = []cli.Author{
-		cli.Author{
-			Name:  "Leonid Boykov",
-			Email: "leonid.v.boykov@gmail.com",
-		},
-	}
+	app.Authors = []cli.Author{{
+		Name:  "Leonid Boykov",
+		Email: "leonid.v.boykov@gmail.com",
+	}}
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
 			Name:  "quiet, q",
