@@ -79,7 +79,7 @@ func (p *Provider) Auth(config getmoe.AuthConfiguration) {
 // BuildRequest builds query based on RequestConfiguration
 func (p *Provider) BuildRequest(config getmoe.RequestConfiguration) {
 	q := p.URL.Query()
-	query.Array(&q, "tags", config.Tags)
+	q.Set("tags", config.Tags.String())
 	query.Int(&q, "limit", p.PostsLimit)
 	p.URL.RawQuery = q.Encode()
 }

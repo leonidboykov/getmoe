@@ -42,7 +42,7 @@ type DownloadConfiguration struct {
 
 // RequestConfiguration holds request related configuration
 type RequestConfiguration struct {
-	Tags []string `yaml:"tags"`
+	Tags Tags `yaml:"tags"`
 }
 
 // Load loads global configuration

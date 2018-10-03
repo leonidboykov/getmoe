@@ -9,9 +9,7 @@ import (
 )
 
 var testProviders = []byte(`
-providers:
-  login: globalUser
-  password: globalPassword
+boards:
   yande.re:
     login: username
     password: password
@@ -21,6 +19,8 @@ providers:
     login: username2
     password: password2
     provider: sankaku
+download:
+  tags: [ "tag1", "tag2" ]
 `)
 
 func TestProviders(t *testing.T) {
