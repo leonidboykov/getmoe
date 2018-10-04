@@ -36,6 +36,12 @@ var defaultProvider = &Provider{
 		Scheme: "https",
 		Path:   "post/index.json",
 	},
+	Headers: map[string]string{
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36",
+		"Referer":    "https://beta.sankakucomplex.com",
+		"Origin":     "https://beta.sankakucomplex.com",
+		"Accept":     "application/json",
+	},
 	PasswordSalt: "choujin-steiner--%s--",
 	AppkeySalt:   "sankakuapp_%s_Z5NE9YASej",
 	PostsLimit:   100,
@@ -44,6 +50,7 @@ var defaultProvider = &Provider{
 // Provider implements moebooru provider
 type Provider struct {
 	URL          *url.URL
+	Headers      map[string]string
 	PasswordSalt string
 	AppkeySalt   string
 	PostsLimit   int
@@ -99,6 +106,9 @@ func (p *Provider) NextPage() {
 // PageRequest builds page request from URL
 func (p *Provider) PageRequest() (*http.Request, error) {
 	req, err := http.NewRequest("GET", p.URL.String(), nil)
+	for k, v := range p.Headers {
+		req.Header.Set(k, v)
+	}
 	if err != nil {
 		return req, err
 	}
