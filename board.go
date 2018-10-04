@@ -22,15 +22,6 @@ type Board struct {
 
 // NewBoard creates a new board with provided configuration
 func NewBoard(provider Provider) *Board {
-	// func New(config getmoe.BoardConfiguration) (*Board, error) {
-	// if config.Provider.Name == "" {
-	// 	return nil, ErrProviderNotSpecified
-	// }
-	// p, ok := provider.Providers[config.Provider.Name]
-	// if !ok {
-	// 	return nil, fmt.Errorf(ErrProviderNotFound, config.Provider.Name)
-	// }
-
 	return &Board{
 		Provider: provider,
 		httpClient: &http.Client{
