@@ -1,12 +1,11 @@
 language: go
 go: "1.11.x"
 
-install:
-  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-  - dep ensure
+env:
+  - GO111MODULE=on
 
 script:
-  - make ci
+  - go test ./...
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
@@ -14,7 +13,7 @@ after_success:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: curl -sL http://git.io/goreleaser | bash
+    script: curl -sL https://git.io/goreleaser | bash
     on:
       tags: true
       condition: $TRAVIS_OS_NAME = linux
