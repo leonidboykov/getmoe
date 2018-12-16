@@ -12,6 +12,23 @@ image boards (boorus). This project started for the purpose of researching of
 various characters popularity, rather than image grabbing, however save feature
 is also available.
 
+## Installing
+
+**macOS**
+
+    brew install leonidboykov/tap/getmoe
+
+**Windows**
+
+    scoop bucket add getmoe https://github.com/leonidboykov/scoop-bucket.git
+    scoop install getmoe
+
+**Development version**
+
+    go get -u github.com/leonidboykov/cmd/getmoe
+
+Development documentation is available on [GoDoc](https://godoc.org/github.com/leonidboykov/getmoe).
+
 ## Usage
 
 The only implemented command for now is `get`. Here is the usage example
@@ -45,4 +62,4 @@ Custom boorus are not available yet.
 
 ## License
 
-getmoe is a free software licensed under the [MIT](LICENSE) license.
+`getmoe` is a free software licensed under the [MIT](LICENSE) license.
