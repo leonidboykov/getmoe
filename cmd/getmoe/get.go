@@ -78,7 +78,7 @@ func saveImage(posts []getmoe.Post, saveDir string, quiet bool) error {
 		}
 
 		if !quiet {
-			fName, _ := utils.FileURLUnescape(p.FileURL)
+			fName, _ := helper.FileURLUnescape(p.FileURL)
 			fmt.Println("Getting", fName[:32], "...")
 		}
 	}
