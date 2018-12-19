@@ -60,5 +60,5 @@ type Post struct {
 }
 
 func (p *Post) parseTags() []string {
-	return strings.Split(p.TagStringGeneral, " ")
+	return strings.Split(p.TagString, " ")
 }

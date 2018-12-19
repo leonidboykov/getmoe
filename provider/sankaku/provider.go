@@ -132,7 +132,7 @@ func (p *Provider) Parse(data []byte) ([]getmoe.Post, error) {
 			Width:     page[i].Width,
 			Height:    page[i].Height,
 			CreatedAt: page[i].parseTime(),
-			Author:    page[i].Author,
+			Author:    page[i].findArtist(),
 			Source:    page[i].Source,
 			Rating:    page[i].Rating,
 			Hash:      page[i].Md5,

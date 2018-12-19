@@ -7,7 +7,7 @@ import (
 	"path"
 	"time"
 
-	"github.com/leonidboykov/getmoe/internal/helper"
+	utils "github.com/leonidboykov/getmoe/internal/helper"
 )
 
 // Post contains post data, represents intersection of *boorus post structs
