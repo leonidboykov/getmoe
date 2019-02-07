@@ -19,11 +19,6 @@ import (
 )
 
 const (
-	defaultPasswordSalt = "choujin-steiner--%s--"
-	defaultPostsLimit   = 100
-)
-
-const (
 	loginKey        = "login"
 	passwordHashKey = "password_hash"
 	appkeyKey       = "appkey"
