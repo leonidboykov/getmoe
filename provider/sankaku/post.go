@@ -25,8 +25,8 @@ type Post struct {
 	Change       int         `json:"change"`
 	HasNotes     bool        `json:"has_notes"`
 	Source       string      `json:"source"`
-	Author       string      `json:"author"`
-	CreatedAt    struct {
+	// Author       string      `json:"author"`
+	CreatedAt struct {
 		N         int    `json:"n"`
 		JSONClass string `json:"json_class"`
 		S         int    `json:"s"`
