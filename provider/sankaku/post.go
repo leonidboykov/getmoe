@@ -1,7 +1,12 @@
 package sankaku
 
-import (
-	"time"
+import "time"
+
+const (
+	artistTag    = 1
+	companyTag   = 2
+	brandTag     = 3
+	characterTag = 4
 )
 
 // Post contains native Sankaku data
@@ -20,8 +25,8 @@ type Post struct {
 	Change       int         `json:"change"`
 	HasNotes     bool        `json:"has_notes"`
 	Source       string      `json:"source"`
-	Author       string      `json:"author"`
-	CreatedAt    struct {
+	// Author       string      `json:"author"`
+	CreatedAt struct {
 		N         int    `json:"n"`
 		JSONClass string `json:"json_class"`
 		S         int    `json:"s"`
@@ -52,6 +57,15 @@ func (p *Post) parseTags() []string {
 		result[i] = p.Tags[i].Name
 	}
 	return result
+}
+
+func (p *Post) findArtist() string {
+	for i := range p.Tags {
+		if p.Tags[i].Type == artistTag {
+			return p.Tags[i].Name
+		}
+	}
+	return ""
 }
 
 func (p *Post) parseTime() time.Time {

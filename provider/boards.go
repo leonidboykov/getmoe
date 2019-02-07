@@ -26,9 +26,12 @@ var AvailableBoards = map[string]*getmoe.Board{
 		URL: getmoe.URLString{URL: url.URL{Host: "danbooru.donmai.us"}},
 	})),
 	"chan.sankakucomplex.com": getmoe.NewBoard(sankaku.New(getmoe.ProviderConfiguration{
-		URL: getmoe.URLString{URL: url.URL{Host: "capi-beta.sankakucomplex.com"}},
+		URL: getmoe.URLString{URL: url.URL{Host: "capi-v2.sankakucomplex.com"}},
 	})),
 	"idol.sankakucomplex.com": getmoe.NewBoard(sankaku.New(getmoe.ProviderConfiguration{
-		URL: getmoe.URLString{URL: url.URL{Host: "iapi.sankakucomplex.com"}},
+		URL: getmoe.URLString{URL: url.URL{
+			Host: "iapi.sankakucomplex.com",
+			Path: "post/index.json",
+		}},
 	})),
 }

@@ -40,7 +40,7 @@ func (p *Post) HasTag(tag string) bool {
 func (p *Post) Save(saveDir string) error {
 	// Getting the actual URL
 	// TODO: support JPG sources forcing
-	fileName, err := utils.FileURLUnescape(p.FileURL)
+	fileName, err := helper.FileURLUnescape(p.FileURL)
 	if err != nil {
 		return err
 	}

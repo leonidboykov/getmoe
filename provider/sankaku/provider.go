@@ -19,11 +19,6 @@ import (
 )
 
 const (
-	defaultPasswordSalt = "choujin-steiner--%s--"
-	defaultPostsLimit   = 100
-)
-
-const (
 	loginKey        = "login"
 	passwordHashKey = "password_hash"
 	appkeyKey       = "appkey"
@@ -34,7 +29,8 @@ const (
 var defaultProvider = &Provider{
 	URL: &url.URL{
 		Scheme: "https",
-		Path:   "post/index.json",
+		// Path:   "post/index.json",
+		Path: "posts",
 	},
 	Headers: map[string]string{
 		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36",
@@ -132,7 +128,7 @@ func (p *Provider) Parse(data []byte) ([]getmoe.Post, error) {
 			Width:     page[i].Width,
 			Height:    page[i].Height,
 			CreatedAt: page[i].parseTime(),
-			Author:    page[i].Author,
+			Author:    page[i].findArtist(),
 			Source:    page[i].Source,
 			Rating:    page[i].Rating,
 			Hash:      page[i].Md5,
