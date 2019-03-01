@@ -11,6 +11,5 @@ func Sha1(value, salt string) string {
 	value = fmt.Sprintf(salt, value)
 	hash := sha1.New()
 	hash.Write([]byte(value))
-	sha1Hash := hex.EncodeToString(hash.Sum(nil))
-	return sha1Hash
+	return hex.EncodeToString(hash.Sum(nil))
 }

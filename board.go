@@ -1,17 +1,10 @@
 package getmoe
 
 import (
-	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
-)
-
-// Board related errors
-var (
-	ErrURLNotSpecified      = errors.New("board: URL not specified")
-	ErrProviderNotSpecified = errors.New("board: provider not specified")
-	ErrProviderNotFound     = "board: provider %s not found"
 )
 
 // Board holds data for API access
@@ -21,11 +14,39 @@ type Board struct {
 }
 
 // NewBoard creates a new board with provided configuration
-func NewBoard(provider Provider) *Board {
+// func NewBoard(provider Provider) *Board {
+// 	return &Board{
+// 		Provider: provider,
+// 		httpClient: &http.Client{
+// 			Timeout: 10 * time.Second,
+// 		},
+// 	}
+// }
+
+// NewBoard creates a new board with provided configuration
+func NewBoard(providerName string, config BoardConfiguration) (*Board, error) {
+	providersMu.RLock()
+	provider, ok := providers[providerName]
+	providersMu.RUnlock()
+	if !ok {
+		return nil, fmt.Errorf("getmoe: unknown provider %s", providerName)
+	}
+
+	provider.New(config.Provider)
 	return &Board{
 		Provider: provider,
 		httpClient: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 10 * time.Second,
+		},
+	}, nil
+}
+
+// NewBoardWithProvider creates a new board with provided configuration
+func NewBoardWithProvider(provider Provider) *Board {
+	return &Board{
+		Provider: provider,
+		httpClient: &http.Client{
+			Timeout: 10 * time.Second,
 		},
 	}
 }

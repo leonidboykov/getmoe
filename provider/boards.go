@@ -12,23 +12,23 @@ import (
 
 // AvailableBoards is a list of predefined boards.
 var AvailableBoards = map[string]*getmoe.Board{
-	"yande.re": getmoe.NewBoard(moebooru.New(getmoe.ProviderConfiguration{
+	"yande.re": getmoe.NewBoardWithProvider(moebooru.New(getmoe.ProviderConfiguration{
 		URL: getmoe.URLString{URL: url.URL{Host: "yande.re"}},
 	})),
-	"konachan.com": getmoe.NewBoard(moebooru.New(getmoe.ProviderConfiguration{
+	"konachan.com": getmoe.NewBoardWithProvider(moebooru.New(getmoe.ProviderConfiguration{
 		URL:          getmoe.URLString{URL: url.URL{Host: "konachan.com"}},
 		PasswordSalt: "So-I-Heard-You-Like-Mupkids-?--%s--",
 	})),
-	"gelbooru.com": getmoe.NewBoard(gelbooru.New(getmoe.ProviderConfiguration{
+	"gelbooru.com": getmoe.NewBoardWithProvider(gelbooru.New(getmoe.ProviderConfiguration{
 		URL: getmoe.URLString{URL: url.URL{Host: "gelbooru.com"}},
 	})),
-	"danbooru.donmai.us": getmoe.NewBoard(danbooru.New(getmoe.ProviderConfiguration{
+	"danbooru.donmai.us": getmoe.NewBoardWithProvider(danbooru.New(getmoe.ProviderConfiguration{
 		URL: getmoe.URLString{URL: url.URL{Host: "danbooru.donmai.us"}},
 	})),
-	"chan.sankakucomplex.com": getmoe.NewBoard(sankaku.New(getmoe.ProviderConfiguration{
+	"chan.sankakucomplex.com": getmoe.NewBoardWithProvider(sankaku.New(getmoe.ProviderConfiguration{
 		URL: getmoe.URLString{URL: url.URL{Host: "capi-v2.sankakucomplex.com"}},
 	})),
-	"idol.sankakucomplex.com": getmoe.NewBoard(sankaku.New(getmoe.ProviderConfiguration{
+	"idol.sankakucomplex.com": getmoe.NewBoardWithProvider(sankaku.New(getmoe.ProviderConfiguration{
 		URL: getmoe.URLString{URL: url.URL{
 			Host: "iapi.sankakucomplex.com",
 			Path: "post/index.json",

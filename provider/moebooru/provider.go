@@ -48,16 +48,20 @@ type Provider struct {
 
 // New creates a new moebooru provider with configuration
 func New(config getmoe.ProviderConfiguration) *Provider {
-	provider := &Provider{
-		URL:          &config.URL.URL,
-		PasswordSalt: config.PasswordSalt,
-		PostsLimit:   config.PostsLimit,
-	}
-	// Apply defaults
-	mergo.Merge(provider, defaultProvider)
-	// Authenticate if login/password have provided
-	provider.Auth(config.Auth)
+	var provider *Provider
+	provider.New(config)
 	return provider
+}
+
+// New creates a new moebooru provider with configuration
+func (p *Provider) New(config getmoe.ProviderConfiguration) {
+	p.URL = &config.URL.URL
+	p.PasswordSalt = config.PasswordSalt
+	p.PostsLimit = config.PostsLimit
+	// Apply defaults
+	mergo.Merge(p, defaultProvider)
+	// Authenticate if login/password have provided
+	p.Auth(config.Auth)
 }
 
 // Auth builds query based on AuthConfiguration
@@ -124,4 +128,8 @@ func (p *Provider) Parse(data []byte) ([]getmoe.Post, error) {
 		}
 	}
 	return result, nil
+}
+
+func init() {
+	getmoe.RegisterProvider("moebooru", &Provider{})
 }
