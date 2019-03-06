@@ -14,16 +14,6 @@ type Board struct {
 }
 
 // NewBoard creates a new board with provided configuration
-// func NewBoard(provider Provider) *Board {
-// 	return &Board{
-// 		Provider: provider,
-// 		httpClient: &http.Client{
-// 			Timeout: 10 * time.Second,
-// 		},
-// 	}
-// }
-
-// NewBoard creates a new board with provided configuration
 func NewBoard(providerName string, config BoardConfiguration) (*Board, error) {
 	providersMu.RLock()
 	provider, ok := providers[providerName]
