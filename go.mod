@@ -1,7 +1,7 @@
 module github.com/leonidboykov/getmoe
 
 require (
-	github.com/imdario/mergo v0.3.7
+	github.com/imdario/mergo v0.3.8
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kr/pty v1.1.3 // indirect
 	github.com/urfave/cli v1.20.0
