@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// Increment increments value based on key provided
+// Increment increments value based on key provided.
 func Increment(q *url.Values, key string) error {
 	strValue := q.Get(key)
 	// handle empty value
@@ -23,12 +23,12 @@ func Increment(q *url.Values, key string) error {
 	return nil
 }
 
-// Int allows to set integer as query value
+// Int allows to set integer as query value.
 func Int(q *url.Values, key string, value int) {
 	q.Set(key, strconv.Itoa(value))
 }
 
-// Array allows to set array of strings as query value
+// Array allows to set array of strings as query value.
 func Array(q *url.Values, key string, value []string) {
 	q.Set(key, strings.Join(value, " "))
 }

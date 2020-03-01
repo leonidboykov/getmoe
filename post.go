@@ -13,10 +13,11 @@ import (
 // Post contains post data, represents intersection of *boorus post structs
 type Post struct {
 	ID        int       `json:"id"`
-	FileURL   string    `json:"file_url"`
-	FileSize  int       `json:"file_size"`
 	Width     int       `json:"width"`
 	Height    int       `json:"height"`
+	FileURL   string    `json:"file_url"`
+	FileType  string    `json:"file_type"`
+	FileSize  int       `json:"file_size"`
 	CreatedAt time.Time `json:"created_at"`
 	Tags      []string  `json:"tags"`
 	Author    string    `json:"author"`
@@ -24,6 +25,8 @@ type Post struct {
 	Rating    string    `json:"rating"`
 	Hash      string    `json:"hash"`
 	Score     int       `json:"score"`
+	VoteCount int       `json:"vote_count"`
+	FavCount  int       `json:"fav_count"`
 }
 
 // HasTag returns true if post has specified tag

@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-// FileURLUnescape extracts file name from URL,
-// unescapes URL and replaces spaces with dashes
+// FileURLUnescape extracts file name from URL, unescapes URL and replaces
+// spaces with dashes.
 func FileURLUnescape(s string) (string, error) {
 	fileName := path.Base(s)
 

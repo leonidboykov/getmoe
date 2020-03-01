@@ -7,13 +7,13 @@ import (
 	"time"
 )
 
-// Board holds data for API access
+// Board holds data for API access.
 type Board struct {
 	Provider   Provider
 	httpClient *http.Client
 }
 
-// NewBoard creates a new board with provided configuration
+// NewBoard creates a new board with provided configuration.
 func NewBoard(providerName string, config BoardConfiguration) (*Board, error) {
 	providersMu.RLock()
 	provider, ok := providers[providerName]
@@ -31,7 +31,7 @@ func NewBoard(providerName string, config BoardConfiguration) (*Board, error) {
 	}, nil
 }
 
-// NewBoardWithProvider creates a new board with provided configuration
+// NewBoardWithProvider creates a new board with provided configuration.
 func NewBoardWithProvider(provider Provider) *Board {
 	return &Board{
 		Provider: provider,
@@ -41,7 +41,7 @@ func NewBoardWithProvider(provider Provider) *Board {
 	}
 }
 
-// Request gets images by tags
+// Request gets images by tags.
 func (b *Board) Request() ([]Post, error) {
 	req, err := b.Provider.PageRequest()
 	if err != nil {
@@ -67,7 +67,7 @@ func (b *Board) Request() ([]Post, error) {
 	return page, nil
 }
 
-// RequestAll checks all pages
+// RequestAll checks all pages.
 func (b *Board) RequestAll() ([]Post, error) {
 	var pages []Post
 	for {

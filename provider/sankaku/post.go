@@ -1,6 +1,8 @@
 package sankaku
 
-import "time"
+import (
+	"github.com/leonidboykov/getmoe"
+)
 
 const (
 	artistTag    = 1
@@ -9,49 +11,37 @@ const (
 	characterTag = 4
 )
 
-// Post contains native Sankaku data
-type Post struct {
-	Width        int         `json:"width"`
-	SampleWidth  int         `json:"sample_width"`
-	FileSize     int         `json:"file_size"`
-	IsFavorited  bool        `json:"is_favorited"`
-	Status       string      `json:"status"`
-	Rating       string      `json:"rating"`
-	SampleHeight int         `json:"sample_height"`
-	Md5          string      `json:"md5"`
-	HasComments  bool        `json:"has_comments"`
-	ParentID     interface{} `json:"parent_id"`
-	HasChildren  bool        `json:"has_children"`
-	Change       int         `json:"change"`
-	HasNotes     bool        `json:"has_notes"`
-	Source       string      `json:"source"`
-	// Author       string      `json:"author"`
-	CreatedAt struct {
-		N         int    `json:"n"`
-		JSONClass string `json:"json_class"`
-		S         int    `json:"s"`
-	} `json:"created_at"`
-	FavCount     int `json:"fav_count"`
-	Height       int `json:"height"`
-	PreviewWidth int `json:"preview_width"`
-	Tags         []struct {
-		Type   int    `json:"type"`
-		NameJa string `json:"name_ja"`
-		Count  int    `json:"count"`
-		Name   string `json:"name"`
-		ID     int    `json:"id"`
-	} `json:"tags"`
-	RecommendedPosts interface{} `json:"recommended_posts"`
-	SampleURL        string      `json:"sample_url"`
-	FileURL          string      `json:"file_url"`
-	ID               int         `json:"id"`
-	PreviewHeight    int         `json:"preview_height"`
-	PreviewURL       string      `json:"preview_url"`
-	VoteCount        int         `json:"vote_count"`
-	TotalScore       int         `json:"total_score"`
+type post struct {
+	ID         int             `json:"id"`
+	Width      int             `json:"width"`
+	Height     int             `json:"height"`
+	Rating     string          `json:"rating"`
+	FileSize   int             `json:"file_size"`
+	FileType   string          `json:"file_type"`
+	FileURL    string          `json:"file_url"`
+	Source     string          `json:"source,omitempty"`
+	Hash       string          `json:"md5"`
+	CreatedAt  getmoe.JSONTime `json:"created_at"`
+	Tags       []tags          `json:"tags"`
+	ParentID   int             `json:"parent_id"`
+	HasNotes   bool            `json:"has_notes"`
+	FavCount   int             `json:"fav_count"`
+	VoteCount  int             `json:"vote_count"`
+	TotalScore int             `json:"total_score"`
 }
 
-func (p *Post) parseTags() []string {
+type tags struct {
+	ID     int    `json:"id"`
+	NameEn string `json:"name_en"`
+	NameJa string `json:"name_ja"`
+	Type   int    `json:"type"`
+	Count  int    `json:"count"`
+	Locale string `json:"locale"`
+	Rating int    `json:"rating"`
+	Name   string `json:"name"`
+}
+
+func (p *post) parseTags() []string {
 	result := make([]string, len(p.Tags))
 	for i := range p.Tags {
 		result[i] = p.Tags[i].Name
@@ -59,15 +49,11 @@ func (p *Post) parseTags() []string {
 	return result
 }
 
-func (p *Post) findArtist() string {
+func (p *post) findArtist() string {
 	for i := range p.Tags {
 		if p.Tags[i].Type == artistTag {
 			return p.Tags[i].Name
 		}
 	}
 	return ""
-}
-
-func (p *Post) parseTime() time.Time {
-	return time.Unix(int64(p.CreatedAt.S), 0)
 }
