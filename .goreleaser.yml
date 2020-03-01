@@ -1,3 +1,4 @@
+project_name: getmoe
 builds:
   - main: ./cmd/getmoe
     binary: getmoe
@@ -22,25 +23,27 @@ changelog:
       - typo
       - Merge pull request
       - Merge branch
-archive:
-  replacements:
-    darwin: macOS
-    linux: Linux
-    windows: Windows
-    386: i386
-    amd64: x86_64
-  format_overrides:
-    - goos: windows
-      format: zip
-brew:
-  github:
-    owner: leonidboykov
-    name: homebrew-tap
-  folder: Formula
-  homepage: https://github.com/leonidboykov/getmoe
-  description: cli tool for boorus
-  test: |
-    system "#{bin}/getmoe -v"
+archives:
+  - replacements:
+      darwin: macOS
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+    format_overrides:
+      - goos: windows
+        format: zip
+brews:
+  - github:
+      owner: leonidboykov
+      name: homebrew-tap
+    folder: Formula
+    homepage: https://github.com/leonidboykov/getmoe
+    description: cli tool for boorus
+    test: |
+      system "#{bin}/getmoe -v"
+    install: |
+      bin.install "getmoe"
 scoop:
   bucket:
     owner: leonidboykov
