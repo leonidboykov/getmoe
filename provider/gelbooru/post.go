@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-// Post contains native Gelbooru data
-type Post struct {
+// post contains native Gelbooru data.
+type post struct {
 	Directory    string      `json:"directory"`
 	Hash         string      `json:"hash"`
 	Height       int         `json:"height"`
@@ -25,10 +25,10 @@ type Post struct {
 	FileURL      string      `json:"file_url"`
 }
 
-func (p *Post) parseTags() []string {
+func (p *post) parseTags() []string {
 	return strings.Split(p.Tags, " ")
 }
 
-func (p *Post) parseTime() time.Time {
+func (p *post) parseTime() time.Time {
 	return time.Unix(int64(p.Change), 0)
 }

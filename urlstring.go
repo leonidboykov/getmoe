@@ -1,8 +1,10 @@
 package getmoe
 
-import "net/url"
+import (
+	"net/url"
+)
 
-// URLString provides a helper to parse string as url.URL
+// URLString provides a helper to parse string as url.URL.
 type URLString struct {
 	url.URL
 }

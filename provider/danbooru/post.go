@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-// Post contains native Danbooru data
-type Post struct {
+// post contains native Danbooru data.
+type post struct {
 	ID                  int         `json:"id"`
 	CreatedAt           time.Time   `json:"created_at"`
 	UploaderID          int         `json:"uploader_id"`
@@ -59,6 +59,6 @@ type Post struct {
 	PreviewFileURL      string      `json:"preview_file_url"`
 }
 
-func (p *Post) parseTags() []string {
+func (p *post) parseTags() []string {
 	return strings.Split(p.TagString, " ")
 }

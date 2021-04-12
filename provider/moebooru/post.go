@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-// Post contains native Moebooru data
-type Post struct {
+// post contains native Moebooru data
+type post struct {
 	ID                  int           `json:"id"`
 	Tags                string        `json:"tags"`
 	CreatedAt           int           `json:"created_at"`
@@ -60,10 +60,10 @@ type Post struct {
 	} `json:"flag_detail"`
 }
 
-func (p *Post) parseTags() []string {
+func (p *post) parseTags() []string {
 	return strings.Split(p.Tags, " ")
 }
 
-func (p *Post) parseTime() time.Time {
+func (p *post) parseTime() time.Time {
 	return time.Unix(int64(p.CreatedAt), 0)
 }
