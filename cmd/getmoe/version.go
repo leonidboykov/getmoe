@@ -3,7 +3,7 @@ package main
 var (
 	version = "master"
 	commit  = "none"
-	data    = "unknown"
+	date    = "unknown"
 )
 
 // TODO: Add `version` command.

@@ -2,6 +2,8 @@ package getmoe
 
 import (
 	"net/url"
+
+	"gopkg.in/yaml.v3"
 )
 
 // URLString provides a helper to parse string as url.URL.
@@ -10,9 +12,9 @@ type URLString struct {
 }
 
 // UnmarshalYAML implements unmarshaller interface for YAML
-func (f *URLString) UnmarshalYAML(unmashal func(interface{}) error) error {
+func (f *URLString) UnmarshalYAML(value *yaml.Node) error {
 	var s string
-	if err := unmashal(&s); err != nil {
+	if err := value.Decode(&s); err != nil {
 		return err
 	}
 	u, err := url.Parse(s)

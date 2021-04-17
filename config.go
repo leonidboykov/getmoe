@@ -6,10 +6,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// GlobalConfiguration provides global configuration.
-type GlobalConfiguration struct {
+// RootConfiguration provides root configuration.
+type RootConfiguration struct {
 	Boards   map[string]BoardConfiguration `yaml:"boards"`
-	Download DownloadConfiguration         `yaml:"download"`
+	Download []DownloadConfiguration       `yaml:"download"`
 }
 
 // BoardConfiguration holds board related configuration.
@@ -54,9 +54,9 @@ type RequestConfiguration struct {
 	Tags []string `yaml:"tags"`
 }
 
-// ReadConfiguraton reads global configuration from file.
-func ReadConfiguraton(fname string) (*GlobalConfiguration, error) {
-	var config GlobalConfiguration
+// ReadConfiguraton reads a root configuration from file.
+func ReadConfiguraton(fname string) (*RootConfiguration, error) {
+	var config RootConfiguration
 	f, err := os.ReadFile(fname)
 	if err != nil {
 		return nil, err
