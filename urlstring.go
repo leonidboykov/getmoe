@@ -11,7 +11,7 @@ type URLString struct {
 	url.URL
 }
 
-// UnmarshalYAML implements unmarshaller interface for YAML
+// UnmarshalYAML implements unmarshaller interface for YAML.
 func (f *URLString) UnmarshalYAML(value *yaml.Node) error {
 	var s string
 	if err := value.Decode(&s); err != nil {

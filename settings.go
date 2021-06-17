@@ -7,30 +7,30 @@ import (
 	"github.com/imdario/mergo"
 )
 
-// settings contains default configurations for providers.
+// presets contains default configurations for providers.
 var (
-	settingsMu sync.RWMutex
-	settings   = make(map[string]*ProviderConfiguration)
+	presetsMu sync.RWMutex
+	presets   = make(map[string]*ProviderConfiguration)
 )
 
-// RegisterSettings registers pre-defined settings for boards.
-func RegisterSettings(name string, config *ProviderConfiguration) {
-	settingsMu.Lock()
-	defer settingsMu.Unlock()
+// RegisterPresets registers pre-defined settings for boards.
+func RegisterPresets(name string, config *ProviderConfiguration) {
+	presetsMu.Lock()
+	defer presetsMu.Unlock()
 	if config == nil {
-		panic("getmoe: unable to register a nil board settings")
+		panic("getmoe: unable to register a nil board presets")
 	}
-	if _, dup := settings[name]; dup {
-		panic("getmoe: settings '" + name + "' is already registered")
+	if _, dup := presets[name]; dup {
+		panic("getmoe: presets '" + name + "' is already registered")
 	}
-	settings[name] = config
+	presets[name] = config
 }
 
-// applySettings applies settings to provider.
-func applySettings(name string, config *ProviderConfiguration) error {
-	if defaultSettings, ok := settings[name]; ok {
-		mergo.Merge(config, defaultSettings)
+// applyPresets applies presets to provider.
+func applyPresets(name string, config *ProviderConfiguration) error {
+	if defaultPresets, ok := presets[name]; ok {
+		mergo.Merge(config, defaultPresets)
 		return nil
 	}
-	return fmt.Errorf("getmoe: unknown settings '%s'", name)
+	return fmt.Errorf("getmoe: unknown presets '%s'", name)
 }

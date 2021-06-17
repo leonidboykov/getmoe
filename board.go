@@ -8,7 +8,7 @@ type Board struct {
 
 // NewBoard creates a new Board.
 func NewBoard(name string, config BoardConfiguration) (Board, error) {
-	if err := applySettings(config.Settings, &config.Provider); err != nil {
+	if err := applyPresets(config.Settings, &config.Provider); err != nil {
 		return Board{}, err
 	}
 
@@ -27,7 +27,7 @@ func (b *Board) RequestAll() ([]Post, error) {
 	var pages []Post
 	currentPage := 1
 	for {
-		page, err := b.provider.RequestPage([]string{"test"}, currentPage)
+		page, err := b.provider.RequestPage(*NewTags("123"), currentPage)
 		if err != nil {
 			return pages, err
 		}

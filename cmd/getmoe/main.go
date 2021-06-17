@@ -14,6 +14,7 @@ func main() {
 		Version: version,
 		Commands: []*cli.Command{
 			&getCommand,
+			&versionCommand,
 		},
 		Flags:  rootFlags,
 		Action: rootAction,

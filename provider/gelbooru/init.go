@@ -6,8 +6,12 @@ func init() {
 	getmoe.RegisterProvider(providerName, New)
 
 	// Default providers.
-	getmoe.RegisterSettings("gelbooru.com", &getmoe.ProviderConfiguration{
+	getmoe.RegisterPresets("gelbooru.com", &getmoe.ProviderConfiguration{
 		Name: providerName,
 		URL:  "https://gelbooru.com/",
+	})
+	getmoe.RegisterPresets("rule34.xxx", &getmoe.ProviderConfiguration{
+		Name: providerName,
+		URL:  "https://rule34.xxx",
 	})
 }

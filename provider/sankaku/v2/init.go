@@ -6,6 +6,10 @@ func init() {
 	getmoe.RegisterProvider(providerName, New)
 
 	// Default providers.
+	getmoe.RegisterPresets("chan.sankakucomplex.com", &getmoe.ProviderConfiguration{
+		Name: providerName,
+		URL:  "https://capi-v2.sankakucomplex.com",
+	})
 	getmoe.RegisterPresets("idol.sankakucomplex.com", &getmoe.ProviderConfiguration{
 		Name: providerName,
 		URL:  "https://iapi.sankakucomplex.com",

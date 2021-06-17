@@ -12,7 +12,7 @@ func LoadBoards(config map[string]BoardConfiguration) (BoardManager, error) {
 	for name, board := range config {
 		b, err := NewBoard(name, board)
 		if err != nil {
-			return BoardManager{}, fmt.Errorf("getmoe: unable to create board '%s': %s", name, err)
+			return BoardManager{}, fmt.Errorf("getmoe: unable to create board '%s': %w", name, err)
 		}
 		m.Boards = append(m.Boards, b)
 	}
