@@ -40,11 +40,11 @@ type errorResponse struct {
 	Message string `json:"error"`
 }
 
-func (s *sankaku) authenticate(login, password string) error {
+func (c *Client) authenticate(login, password string) error {
 	var success authResponse
 	var errorResp errorResponse
 
-	resp, err := s.sling.New().Post("auth/token").BodyJSON(credentials{
+	resp, err := c.sling.New().Post("auth/token").BodyJSON(credentials{
 		Login:    login,
 		Password: password,
 	}).Receive(&success, &errorResp)
@@ -57,7 +57,7 @@ func (s *sankaku) authenticate(login, password string) error {
 	}
 
 	token := strings.Join([]string{success.TokenType, success.AccessToken}, " ")
-	s.sling.Set("Authorization", token)
+	c.sling.Set("Authorization", token)
 
 	return nil
 }
