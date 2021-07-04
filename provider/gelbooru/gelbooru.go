@@ -1,6 +1,8 @@
 package gelbooru
 
 import (
+	"time"
+
 	"github.com/dghubble/sling"
 	"github.com/imdario/mergo"
 
@@ -67,10 +69,10 @@ func (c *Client) RequestPage(tags getmoe.Tags, page int) ([]getmoe.Post, error) 
 			FileURL:   posts[i].FileURL,
 			Width:     posts[i].Width,
 			Height:    posts[i].Height,
-			CreatedAt: posts[i].parseTime(),
+			CreatedAt: time.Time(posts[i].Change),
 			Rating:    posts[i].Rating,
 			Hash:      posts[i].Hash,
-			Tags:      posts[i].parseTags(),
+			Tags:      posts[i].Tags,
 			Score:     posts[i].Score,
 		}
 	}
