@@ -48,14 +48,14 @@ func TestDanbooru_authenticate(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			d := danbooru{sling: sling.New()}
-			d.authenticate(getmoe.Credentials{
+			c := Client{sling: sling.New()}
+			c.authenticate(getmoe.Credentials{
 				Login:          tc.login,
 				Password:       tc.password,
 				HashedPassword: tc.hashedPassword,
 				APIKey:         tc.apiKey,
 			}, tc.passwordSalt)
-			req, err := d.sling.Request()
+			req, err := c.sling.Request()
 			if err != nil {
 				t.Fatal("unexpected error", err)
 			}

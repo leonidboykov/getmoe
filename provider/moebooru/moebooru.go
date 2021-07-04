@@ -7,6 +7,8 @@ Source code of Moebooru is available at https://github.com/moebooru/moebooru
 package moebooru
 
 import (
+	"time"
+
 	"github.com/dghubble/sling"
 	"github.com/imdario/mergo"
 
@@ -65,12 +67,12 @@ func (c *Client) RequestPage(tags getmoe.Tags, page int) ([]getmoe.Post, error) 
 			FileSize:  posts[i].FileSize,
 			Width:     posts[i].Width,
 			Height:    posts[i].Height,
-			CreatedAt: posts[i].parseTime(),
+			CreatedAt: time.Time(posts[i].CreatedAt),
 			Author:    posts[i].Author,
 			Source:    posts[i].Source,
 			Rating:    posts[i].Rating,
 			Hash:      posts[i].Md5,
-			Tags:      posts[i].parseTags(),
+			Tags:      posts[i].Tags,
 			Score:     posts[i].Score,
 		}
 	}

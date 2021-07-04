@@ -18,13 +18,13 @@ type credentials struct {
 	PasswordHash string `url:"password_hash"`
 }
 
-func (m *danbooru) authenticate(creds getmoe.Credentials, passwordSalt string) {
+func (c *Client) authenticate(creds getmoe.Credentials, passwordSalt string) {
 	if creds.Login == "" {
 		return
 	}
 
 	if creds.APIKey != "" {
-		m.sling.QueryStruct(credentialsAPI{
+		c.sling.QueryStruct(credentialsAPI{
 			Username: creds.Login,
 			APIKey:   creds.APIKey,
 		})
@@ -36,7 +36,7 @@ func (m *danbooru) authenticate(creds getmoe.Credentials, passwordSalt string) {
 	}
 
 	if creds.HashedPassword != "" {
-		m.sling.QueryStruct(credentials{
+		c.sling.QueryStruct(credentials{
 			Login:        creds.Login,
 			PasswordHash: creds.HashedPassword,
 		})

@@ -15,7 +15,7 @@ import (
 
 const providerName = "danbooru"
 
-type danbooru struct {
+type Client struct {
 	sling *sling.Sling
 
 	passwordSalt string
@@ -28,30 +28,30 @@ var defaultConfiguration = &getmoe.ProviderConfiguration{
 }
 
 type queryStruct struct {
-	limit int    `url:"limit"`
-	tags  string `url:"tags"`
-	page  int    `url:"page"`
+	Limit int    `url:"limit"`
+	Tags  string `url:"tags"`
+	Page  int    `url:"page"`
 }
 
 // New creates a new Danbooru provider.
 func New(config getmoe.ProviderConfiguration) getmoe.Provider {
 	mergo.Merge(config, defaultConfiguration)
-	d := danbooru{
+	c := Client{
 		sling:        sling.New().Base(config.URL),
 		passwordSalt: config.PasswordSalt,
 		postsLimit:   config.PostsLimit,
 	}
-	d.authenticate(config.Credentials, config.PasswordSalt)
+	c.authenticate(config.Credentials, config.PasswordSalt)
 
-	return &d
+	return &c
 }
 
-func (d *danbooru) RequestPage(tags getmoe.Tags, page int) ([]getmoe.Post, error) {
+func (c *Client) RequestPage(tags getmoe.Tags, page int) ([]getmoe.Post, error) {
 	var posts []post
-	_, err := d.sling.New().Get("posts.json").QueryStruct(queryStruct{
-		tags:  tags.String(),
-		page:  page,
-		limit: d.postsLimit,
+	_, err := c.sling.New().Get("posts.json").QueryStruct(queryStruct{
+		Tags:  tags.String(),
+		Page:  page,
+		Limit: c.postsLimit,
 	}).ReceiveSuccess(&posts)
 	if err != nil {
 		return nil, err
