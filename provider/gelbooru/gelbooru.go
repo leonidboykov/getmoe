@@ -1,7 +1,3 @@
-/*
-Package gelbooru implements a simple library for accessing Gelbooru-based image
-boards.
-*/
 package gelbooru
 
 import (
@@ -13,7 +9,7 @@ import (
 
 const providerName = "gelbooru"
 
-type gelbooru struct {
+type Client struct {
 	sling *sling.Sling
 
 	postsLimit int
@@ -23,40 +19,42 @@ var defaultConfiguration = &getmoe.ProviderConfiguration{
 	PostsLimit: 1000,
 }
 
-type apiSettings struct {
-	// Force API renderer, must be `dapi`.
-	page string `uri:"page"`
-	// Force JSON output, must be 1.
-	json int `url:"json"`
+// apiSettings contains params to enable JSON API.
+var apiSettings = struct {
+	Page string `url:"page"`
+	JSON int    `url:"json"`
+	S    string `url:"s"`
+	Q    string `url:"q"`
+}{
+	Page: "dapi",
+	JSON: 1,
+	S:    "post",
+	Q:    "index",
 }
 
 type queryStruct struct {
-	limit int    `url:"limit"`
-	tags  string `url:"tags"`
-	page  int    `url:"pid"`
+	Limit int    `url:"limit"`
+	Tags  string `url:"tags"`
+	Page  int    `url:"pid"`
 }
 
 // New creates a new Gelbooru provider.
 func New(config getmoe.ProviderConfiguration) getmoe.Provider {
-	mergo.Merge(config, defaultConfiguration)
-	g := gelbooru{
-		sling: sling.New().Base(config.URL).Get("index.php").QueryStruct(apiSettings{
-			page: "dapi",
-			json: 1,
-		}),
+	mergo.Merge(&config, defaultConfiguration)
+	c := Client{
+		sling:      sling.New().Base(config.URL).Get("index.php").QueryStruct(apiSettings),
 		postsLimit: config.PostsLimit,
 	}
-	g.authenticate(config.Credentials)
-
-	return &g
+	c.authenticate(config.Credentials)
+	return &c
 }
 
-func (g *gelbooru) RequestPage(tags getmoe.Tags, page int) ([]getmoe.Post, error) {
+func (c *Client) RequestPage(tags getmoe.Tags, page int) ([]getmoe.Post, error) {
 	var posts []post
-	_, err := g.sling.New().QueryStruct(queryStruct{
-		tags:  tags.String(),
-		page:  page,
-		limit: g.postsLimit,
+	_, err := c.sling.New().QueryStruct(queryStruct{
+		Tags:  tags.String(),
+		Page:  page,
+		Limit: c.postsLimit,
 	}).ReceiveSuccess(&posts)
 	if err != nil {
 		return nil, err

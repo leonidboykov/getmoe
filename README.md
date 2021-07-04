@@ -71,3 +71,9 @@ Custom boorus are not available yet.
   * Gelbooru
   * Danbooru
   * Shimmie 2
+
+## Workflow
+
+  * Load boards
+    * Load every single board with provider
+  * Load commands

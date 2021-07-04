@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/urfave/cli/v2"
 
 	"github.com/leonidboykov/getmoe"
@@ -10,6 +8,7 @@ import (
 	_ "github.com/leonidboykov/getmoe/provider/gelbooru"
 	_ "github.com/leonidboykov/getmoe/provider/moebooru"
 	_ "github.com/leonidboykov/getmoe/provider/sankaku"
+	_ "github.com/leonidboykov/getmoe/provider/sankaku/v2"
 )
 
 var rootFlags = []cli.Flag{
@@ -28,12 +27,13 @@ func rootAction(ctx *cli.Context) error {
 		return err
 	}
 
-	for boardName, board := range config.Boards {
-		fmt.Println(boardName, board.Provider.Name)
-	}
-
 	boards, err := getmoe.LoadBoards(config.Boards)
-	_ = boards
+	if err != nil {
+		return err
+	}
+	if err := boards.ExecuteCommands(config.Download); err != nil {
+		return err
+	}
 
 	return nil
 }

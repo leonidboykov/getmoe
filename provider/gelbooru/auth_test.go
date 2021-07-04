@@ -33,12 +33,12 @@ func TestGelbooru_authenticate(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			g := gelbooru{sling: sling.New()}
-			g.authenticate(getmoe.Credentials{
+			c := Client{sling: sling.New()}
+			c.authenticate(getmoe.Credentials{
 				UserID: tc.userID,
 				APIKey: tc.apiKey,
 			})
-			req, err := g.sling.Request()
+			req, err := c.sling.Request()
 			if err != nil {
 				t.Fatal("unexpected error", err)
 			}

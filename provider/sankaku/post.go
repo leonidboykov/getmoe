@@ -33,7 +33,7 @@ type tags struct {
 	Type   int    `json:"type"`
 	Count  int    `json:"count"`
 	Locale string `json:"locale"`
-	Rating int    `json:"rating"`
+	Rating string `json:"rating"`
 	Name   string `json:"name"`
 }
 

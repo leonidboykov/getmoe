@@ -1,6 +1,8 @@
 package sankaku
 
 import (
+	"fmt"
+
 	"github.com/dghubble/sling"
 	"github.com/imdario/mergo"
 
@@ -11,7 +13,6 @@ const providerName = "sankaku_v2"
 
 type sankaku struct {
 	sling *sling.Sling
-	user  userData
 
 	postsLimit int
 }
@@ -21,19 +22,27 @@ var defaultConfiguration = &getmoe.ProviderConfiguration{
 }
 
 type queryStruct struct {
-	limit int    `url:"limit"`
-	tags  string `url:"tags"`
-	page  int    `url:"page"`
+	Limit int    `url:"limit"`
+	Tags  string `url:"tags"`
+	Page  int    `url:"page"`
 }
+
+// type errorResp struct {
+// 	Success bool     `json:"success"`
+// 	Code    string   `json:"code"`
+// 	Errors  []string `json:"errors"`
+// }
 
 // New creates a new Sankaku v2 provider.
 func New(config getmoe.ProviderConfiguration) getmoe.Provider {
-	mergo.Merge(config, defaultConfiguration)
+	mergo.Merge(&config, defaultConfiguration)
 	s := sankaku{
 		sling:      sling.New().Base(config.URL),
 		postsLimit: config.PostsLimit,
 	}
-	s.authenticate(config.Credentials.Login, config.Credentials.Password)
+	if err := s.authenticate(config.Credentials.Login, config.Credentials.Password); err != nil {
+		fmt.Println(err)
+	}
 
 	return &s
 }
@@ -41,10 +50,11 @@ func New(config getmoe.ProviderConfiguration) getmoe.Provider {
 func (s *sankaku) RequestPage(tags getmoe.Tags, page int) ([]getmoe.Post, error) {
 	var posts []post
 	_, err := s.sling.New().Get("posts").QueryStruct(queryStruct{
-		tags:  tags.String(),
-		page:  page,
-		limit: s.postsLimit,
+		Tags:  tags.String(),
+		Page:  page,
+		Limit: s.postsLimit,
 	}).ReceiveSuccess(&posts)
+
 	if err != nil {
 		return nil, err
 	}

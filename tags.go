@@ -23,8 +23,8 @@ const (
 )
 
 const (
-	ratingKey = "rating:"
-	dateKey   = "date:"
+	ratingKey = "rating"
+	dateKey   = "date"
 )
 
 const timeFormat = "2006-01-02"
@@ -37,7 +37,10 @@ type Tags struct {
 // NewTags allocates a new list. You may provide as many tags as you want.
 //  t := getmoe.NewTags("tag1", "tag2")
 func NewTags(tags ...string) *Tags {
-	return new(Tags).And(tags...)
+	return &Tags{
+		Keywords: includeExclude{Include: tags},
+		Meta:     make(map[string]includeExclude),
+	}
 }
 
 // And appends tags to tag list.
