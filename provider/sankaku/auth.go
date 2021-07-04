@@ -14,7 +14,7 @@ type credentials struct {
 	Appkey       string `url:"appkey"`
 }
 
-func (s *sankaku) authenticate(creds getmoe.Credentials, passwordSalt, appkeySalt string) {
+func (c *Client) authenticate(creds getmoe.Credentials, passwordSalt, appkeySalt string) {
 	if creds.Login == "" {
 		return
 	}
@@ -26,7 +26,7 @@ func (s *sankaku) authenticate(creds getmoe.Credentials, passwordSalt, appkeySal
 	}
 
 	if creds.HashedPassword != "" {
-		s.sling.QueryStruct(credentials{
+		c.sling.QueryStruct(credentials{
 			Login:        creds.Login,
 			PasswordHash: creds.HashedPassword,
 			Appkey:       appkey,

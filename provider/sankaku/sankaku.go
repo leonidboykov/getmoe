@@ -8,7 +8,7 @@ import (
 
 const providerName = "sankaku"
 
-type sankaku struct {
+type Client struct {
 	sling *sling.Sling
 
 	postLimit int
@@ -29,21 +29,21 @@ type queryStruct struct {
 // New creates a new Sankaku provider.
 func New(config getmoe.ProviderConfiguration) getmoe.Provider {
 	mergo.Merge(config, defaultConfiguration)
-	s := sankaku{
+	c := Client{
 		sling:     sling.New().Base(config.URL),
 		postLimit: config.PostsLimit,
 	}
-	s.authenticate(config.Credentials, config.PasswordSalt, config.AppkeySalt)
+	c.authenticate(config.Credentials, config.PasswordSalt, config.AppkeySalt)
 
-	return &s
+	return &c
 }
 
-func (s *sankaku) RequestPage(tags getmoe.Tags, page int) ([]getmoe.Post, error) {
+func (c *Client) RequestPage(tags getmoe.Tags, page int) ([]getmoe.Post, error) {
 	var posts []post
-	_, err := s.sling.New().Get("post/index.json").QueryStruct(queryStruct{
+	_, err := c.sling.New().Get("post/index.json").QueryStruct(queryStruct{
 		tags:  tags.String(),
 		page:  page,
-		limit: s.postLimit,
+		limit: c.postLimit,
 	}).ReceiveSuccess(&posts)
 	if err != nil {
 		return nil, err
