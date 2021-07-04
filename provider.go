@@ -2,27 +2,24 @@ package getmoe
 
 import (
 	"fmt"
-	"net/http"
 	"sync"
 )
 
-var (
-	providersMu sync.RWMutex
-	providers   = make(map[string]Provider)
-)
-
-// Provider describes Board provider
+// Provider describes a board provider.
 type Provider interface {
-	New(ProviderConfiguration)
-	Auth(AuthConfiguration)
-	BuildRequest(RequestConfiguration)
-	NextPage()
-	PageRequest() (*http.Request, error)
-	Parse([]byte) ([]Post, error)
+	RequestPage(tags Tags, page int) ([]Post, error)
 }
 
-// RegisterProvider registers booru provider
-func RegisterProvider(name string, provider Provider) {
+// ProviderFactory represents provider constructor.
+type ProviderFactory func(ProviderConfiguration) Provider
+
+var (
+	providersMu sync.RWMutex
+	providers   = make(map[string]ProviderFactory)
+)
+
+// RegisterProvider registers provider constructor to factory.
+func RegisterProvider(name string, provider ProviderFactory) {
 	providersMu.Lock()
 	defer providersMu.Unlock()
 	if provider == nil {
@@ -34,14 +31,13 @@ func RegisterProvider(name string, provider Provider) {
 	providers[name] = provider
 }
 
-// NewProvider creates a new provider
-func NewProvider(providerName string, conf ProviderConfiguration) (*Provider, error) {
+// NewProvider construcs a new provider with congifuration.
+func NewProvider(name string, config ProviderConfiguration) (Provider, error) {
 	providersMu.RLock()
-	provider, ok := providers[providerName]
-	providersMu.RUnlock()
+	defer providersMu.RUnlock()
+	provider, ok := providers[name]
 	if !ok {
-		return nil, fmt.Errorf("getmoe: unknown provider %s", providerName)
+		return nil, fmt.Errorf("getmoe: unknown provider '%s'", name)
 	}
-	provider.New(conf)
-	return &provider, nil
+	return provider(config), nil
 }

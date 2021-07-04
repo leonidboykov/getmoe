@@ -1,0 +1,13 @@
+package sankaku
+
+import "github.com/leonidboykov/getmoe"
+
+func init() {
+	getmoe.RegisterProvider(providerName, New)
+
+	// Default providers.
+	getmoe.RegisterPresets("idol.sankakucomplex.com", &getmoe.ProviderConfiguration{
+		Name: providerName,
+		URL:  "https://iapi.sankakucomplex.com",
+	})
+}

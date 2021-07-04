@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"testing"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 
 	"github.com/leonidboykov/getmoe"
 )
@@ -14,20 +14,41 @@ type TestURLString struct {
 }
 
 func TestUnmarshalYAML(t *testing.T) {
-	tests := []struct {
-		in   string
+	tt := []struct {
+		name string
+		args string
 		want getmoe.URLString `yaml:"host"`
+		err  string
 	}{
-		{"host: https://example.com", getmoe.URLString{URL: url.URL{Scheme: "https", Host: "example.com"}}},
-		{"", getmoe.URLString{URL: url.URL{}}},
+		{
+			name: "success",
+			args: "host: https://example.com",
+			want: getmoe.URLString{URL: url.URL{Scheme: "https", Host: "example.com"}},
+			err:  "",
+		},
+		{
+			name: "empty",
+			args: "",
+			want: getmoe.URLString{URL: url.URL{}},
+			err:  "",
+		},
+		{
+			name: "url parse error",
+			args: "host: ':'",
+			want: getmoe.URLString{URL: url.URL{}},
+			err:  `parse ":": missing protocol scheme`,
+		},
 	}
-	for _, test := range tests {
-		var field TestURLString
-		if err := yaml.Unmarshal([]byte(test.in), &field); err != nil {
-			t.Error(err)
-		}
-		if field.Host.String() != test.want.String() {
-			t.Errorf("Unmarshal(%s) == %s, want %s", test.in, field.Host.String(), test.want.String())
-		}
+	for _, tc := range tt {
+		t.Run(tc.name, func(t *testing.T) {
+			var field TestURLString
+			err := yaml.Unmarshal([]byte(tc.args), &field)
+			if err != nil && err.Error() != tc.err {
+				t.Fatalf("expected err %v, got %v", tc.err, err)
+			}
+			if field.Host.String() != tc.want.String() {
+				t.Errorf("Unmarshal(%s) == %s, want %s", tc.args, field.Host.String(), tc.want.String())
+			}
+		})
 	}
 }

@@ -1,16 +1,8 @@
 package getmoe
 
-import (
-	"io"
-	"net/http"
-	"os"
-	"path"
-	"time"
+import "time"
 
-	"github.com/leonidboykov/getmoe/internal/helper"
-)
-
-// Post contains post data, represents intersection of *boorus post structs
+// Post contains post data, represents intersection of *boorus post structs.
 type Post struct {
 	ID        int       `json:"id"`
 	Width     int       `json:"width"`
@@ -18,7 +10,6 @@ type Post struct {
 	FileURL   string    `json:"file_url"`
 	FileType  string    `json:"file_type"`
 	FileSize  int       `json:"file_size"`
-	CreatedAt time.Time `json:"created_at"`
 	Tags      []string  `json:"tags"`
 	Author    string    `json:"author"`
 	Source    string    `json:"source"`
@@ -27,9 +18,10 @@ type Post struct {
 	Score     int       `json:"score"`
 	VoteCount int       `json:"vote_count"`
 	FavCount  int       `json:"fav_count"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
-// HasTag returns true if post has specified tag
+// HasTag returns true if post has specified tag.
 func (p *Post) HasTag(tag string) bool {
 	for i := range p.Tags {
 		if p.Tags[i] == tag {
@@ -37,30 +29,4 @@ func (p *Post) HasTag(tag string) bool {
 		}
 	}
 	return false
-}
-
-// Save post to dir
-func (p *Post) Save(saveDir string) error {
-	// Getting the actual URL
-	// TODO: support JPG sources forcing
-	fileName, err := helper.FileURLUnescape(p.FileURL)
-	if err != nil {
-		return err
-	}
-
-	file, err := os.Create(path.Join(saveDir, fileName))
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	resp, err := http.Get(p.FileURL)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	io.Copy(file, resp.Body)
-
-	return nil
 }
