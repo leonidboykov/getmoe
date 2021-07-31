@@ -32,7 +32,8 @@ type tags []string
 
 // UnmarshalJSON implements JSON Unmarshaler.
 func (t *tags) UnmarshalJSON(data []byte) error {
-	str, err := strconv.Unquote(string(data))
+	str := strings.ReplaceAll(string(data), "\\", "") // hack for escaped slash in tag.
+	str, err := strconv.Unquote(str)
 	if err != nil {
 		return err
 	}

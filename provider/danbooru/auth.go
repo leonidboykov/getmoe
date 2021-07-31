@@ -9,8 +9,8 @@ import (
 )
 
 type credentialsAPI struct {
-	Username string `url:"username"`
-	APIKey   string `url:"api_key"`
+	Login  string `url:"login"`
+	APIKey string `url:"api_key"`
 }
 
 type credentials struct {
@@ -25,8 +25,8 @@ func (c *Client) authenticate(creds getmoe.Credentials, passwordSalt string) {
 
 	if creds.APIKey != "" {
 		c.sling.QueryStruct(credentialsAPI{
-			Username: creds.Login,
-			APIKey:   creds.APIKey,
+			Login:  creds.Login,
+			APIKey: creds.APIKey,
 		})
 		return
 	}

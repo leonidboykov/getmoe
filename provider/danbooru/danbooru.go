@@ -1,12 +1,8 @@
-/*
-Package danbooru implements a simple library for accessing Danbooru-based image
-boards.
-
-Source code of Danbooru is available at https://github.com/r888888888/danbooru
-*/
 package danbooru
 
 import (
+	"net/http"
+
 	"github.com/dghubble/sling"
 	"github.com/imdario/mergo"
 
@@ -33,9 +29,15 @@ type queryStruct struct {
 	Page  int    `url:"page"`
 }
 
+type errorResponse struct {
+	Success   bool     `json:"success"`
+	Message   string   `json:"message"`
+	Backtrace []string `json:"backtrace"`
+}
+
 // New creates a new Danbooru provider.
 func New(config getmoe.ProviderConfiguration) getmoe.Provider {
-	mergo.Merge(config, defaultConfiguration)
+	mergo.Merge(&config, defaultConfiguration)
 	c := Client{
 		sling:        sling.New().Base(config.URL),
 		passwordSalt: config.PasswordSalt,
@@ -48,13 +50,17 @@ func New(config getmoe.ProviderConfiguration) getmoe.Provider {
 
 func (c *Client) RequestPage(tags getmoe.Tags, page int) ([]getmoe.Post, error) {
 	var posts []post
-	_, err := c.sling.New().Get("posts.json").QueryStruct(queryStruct{
+	var errResp ErrResponse
+	resp, err := c.sling.New().Get("posts.json").QueryStruct(queryStruct{
 		Tags:  tags.String(),
 		Page:  page,
 		Limit: c.postsLimit,
-	}).ReceiveSuccess(&posts)
+	}).Receive(&posts, &errResp)
 	if err != nil {
 		return nil, err
+	}
+	if resp.StatusCode != http.StatusOK && !errResp.Success {
+		return nil, &errResp
 	}
 
 	result := make([]getmoe.Post, len(posts))

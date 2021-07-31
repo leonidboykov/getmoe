@@ -29,11 +29,11 @@ func LoadBoards(config map[string]BoardConfiguration) (BoardManager, error) {
 func (m *BoardManager) ExecuteCommands(cmds []DownloadConfiguration) error {
 	for _, cmd := range cmds {
 		// Execute command on all boards if there are no boards specified.
-		if len(cmd.DestinationConfiguration.Boards) == 0 {
-			cmd.DestinationConfiguration.Boards = m.boardNames
+		if len(cmd.Boards) == 0 {
+			cmd.Boards = m.boardNames
 		}
 
-		for _, name := range cmd.DestinationConfiguration.Boards {
+		for _, name := range cmd.Boards {
 			if board, ok := m.Boards[name]; ok {
 				if err := m.executeCommand(board, cmd); err != nil {
 					return err

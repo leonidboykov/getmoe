@@ -63,17 +63,3 @@ Custom boorus are not available yet.
 ## License
 
 `getmoe` is a free software licensed under the [MIT](LICENSE) license.
-
-
-# TODO
-
-  * Re-implement old sankaku (for idol.sankakucomplex.com)
-  * Gelbooru
-  * Danbooru
-  * Shimmie 2
-
-## Workflow
-
-  * Load boards
-    * Load every single board with provider
-  * Load commands

@@ -40,15 +40,14 @@ type Credentials struct {
 // DownloadConfiguration holds download related configuration.
 type DownloadConfiguration struct {
 	DestinationConfiguration DestinationConfiguration `yaml:"destination"`
-
-	Tags Tags `yaml:"search"`
+	Boards                   stringOrSlice            `yaml:"boards"`
+	Tags                     Tags                     `yaml:"search"`
 }
 
 // DestinationConfiguration holds save related configuration.
 type DestinationConfiguration struct {
-	Boards    stringOrSlice `yaml:"boards"`
-	Directory string        `yaml:"directory"`
-	FileName  string        `yaml:"filename"`
+	Directory string `yaml:"directory"`
+	FileName  string `yaml:"filename"`
 }
 
 // ReadConfiguraton reads a root configuration from file.
