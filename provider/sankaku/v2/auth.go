@@ -1,7 +1,6 @@
 package sankaku
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -35,14 +34,9 @@ type credentials struct {
 	Password string `json:"password"`
 }
 
-type errorResponse struct {
-	Success bool   `json:"success"`
-	Message string `json:"error"`
-}
-
 func (c *Client) authenticate(login, password string) error {
 	var success authResponse
-	var errorResp errorResponse
+	var errorResp ErrResponse
 
 	resp, err := c.sling.New().Post("auth/token").BodyJSON(credentials{
 		Login:    login,
@@ -53,7 +47,7 @@ func (c *Client) authenticate(login, password string) error {
 	}
 
 	if resp.StatusCode != http.StatusOK && !errorResp.Success {
-		return fmt.Errorf("sankaku: unable to authenticate: %w", errors.New(errorResp.Message))
+		return fmt.Errorf("sankaku: unable to authenticate: %w", errorResp)
 	}
 
 	token := strings.Join([]string{success.TokenType, success.AccessToken}, " ")
