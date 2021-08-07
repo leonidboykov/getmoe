@@ -28,7 +28,7 @@ func TestDanbooru_authenticate(t *testing.T) {
 			apiKey:         "secure_api_key",
 			hashedPassword: "secure_password",
 			password:       "123456789",
-			expectedParams: "api_key=secure_api_key&username=user",
+			expectedParams: "api_key=secure_api_key&login=user",
 		},
 		{
 			name:           "use pre-hashed password",

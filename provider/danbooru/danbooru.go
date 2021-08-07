@@ -29,12 +29,6 @@ type queryStruct struct {
 	Page  int    `url:"page"`
 }
 
-type errorResponse struct {
-	Success   bool     `json:"success"`
-	Message   string   `json:"message"`
-	Backtrace []string `json:"backtrace"`
-}
-
 // New creates a new Danbooru provider.
 func New(config getmoe.ProviderConfiguration) getmoe.Provider {
 	mergo.Merge(&config, defaultConfiguration)
