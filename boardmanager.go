@@ -1,7 +1,11 @@
 package getmoe
 
 import (
+	"bytes"
 	"fmt"
+	"html/template"
+	"path/filepath"
+	"strings"
 )
 
 type BoardManager struct {
@@ -44,26 +48,42 @@ func (m *BoardManager) ExecuteCommands(cmds []DownloadConfiguration) error {
 	return nil
 }
 
+type templateData struct {
+	BoardName  string
+	PostID     int
+	PostAuthor string
+	FilePath   string
+	FileExt    string
+	FileHash   string
+}
+
 func (m *BoardManager) executeCommand(b *Board, cmd DownloadConfiguration) error {
 	posts, err := b.RequestAll(cmd.Tags)
 	if err != nil {
 		return err
 	}
 
-	// if err := os.MkdirAll(cmd.DestinationConfiguration.Directory, os.ModePerm); err != nil {
-	// 	return err
-	// }
-	for _, p := range posts {
-		fmt.Println("Saving", p.FileURL, p.Hash)
-		// os.MkdirAll(saveDir, os.ModePerm)
-		// if err := p.Save(saveDir); err != nil {
-		// 	return err
-		// }
+	tmpl, err := template.New("savepath").Parse(cmd.SavePath)
+	if err != nil {
+		return err
+	}
 
-		// if !quiet {
-		// 	fName, _ := helper.FileURLUnescape(p.FileURL)
-		// 	fmt.Println("Getting", fName[:32], "...")
-		// }
+	for _, p := range posts {
+		var fname bytes.Buffer
+		ext := filepath.Ext(p.FileURL)
+		bname := strings.TrimSuffix(filepath.Base(p.FileURL), ext)
+		data := templateData{
+			BoardName:  b.name,
+			PostID:     p.ID,
+			PostAuthor: p.Author,
+			FileHash:   p.Hash,
+			FilePath:   bname,
+			FileExt:    ext,
+		}
+		if err := tmpl.Execute(&fname, data); err != nil {
+			return err
+		}
+		fmt.Println("Saving to", fname.String())
 	}
 	return nil
 }
