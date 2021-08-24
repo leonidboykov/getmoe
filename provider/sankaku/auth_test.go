@@ -25,26 +25,23 @@ func TestSankaku_authenticate(t *testing.T) {
 		{
 			name:           "use api kei",
 			login:          "user",
-			appkeySalt:     "appkey-%s-salt",
 			hashedPassword: "secure_password",
 			password:       "123456789",
-			expectedParams: "appkey=0baeecaeb2fbc4c435d572400f5b94657924f012&login=user&password_hash=secure_password",
+			expectedParams: "appkey=bf7420a71090010192df8751d8f5504cde002be1&login=user&password_hash=secure_password",
 		},
 		{
 			name:           "use pre-hashed password",
 			login:          "user",
-			appkeySalt:     "appkey-%s-salt",
 			hashedPassword: "secure_password",
 			password:       "123456789",
-			expectedParams: "appkey=0baeecaeb2fbc4c435d572400f5b94657924f012&login=user&password_hash=secure_password",
+			expectedParams: "appkey=bf7420a71090010192df8751d8f5504cde002be1&login=user&password_hash=secure_password",
 		},
 		{
 			name:           "use plain password",
 			login:          "user",
-			appkeySalt:     "appkey-%s-salt",
 			password:       "123456789",
 			passwordSalt:   "choujin-steiner--%s--",
-			expectedParams: "appkey=0baeecaeb2fbc4c435d572400f5b94657924f012&login=user&password_hash=a082648f7bcc1e40b5d562fa9b808689a36ca6be",
+			expectedParams: "appkey=bf7420a71090010192df8751d8f5504cde002be1&login=user&password_hash=a082648f7bcc1e40b5d562fa9b808689a36ca6be",
 		},
 	}
 
@@ -55,7 +52,7 @@ func TestSankaku_authenticate(t *testing.T) {
 				Login:          tc.login,
 				Password:       tc.password,
 				HashedPassword: tc.hashedPassword,
-			}, tc.passwordSalt, tc.appkeySalt)
+			}, tc.passwordSalt)
 			req, err := c.sling.Request()
 			if err != nil {
 				t.Fatal("unexpected error", err)

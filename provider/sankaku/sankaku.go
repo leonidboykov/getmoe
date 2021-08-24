@@ -17,7 +17,6 @@ type Client struct {
 var defaultConfiguration = &getmoe.ProviderConfiguration{
 	PostsLimit:   100,
 	PasswordSalt: "choujin-steiner--%s--",
-	AppkeySalt:   "sankakuapp_%s_Z5NE9YASej",
 }
 
 type queryStruct struct {
@@ -33,7 +32,7 @@ func New(config getmoe.ProviderConfiguration) getmoe.Provider {
 		sling:     sling.New().Base(config.URL),
 		postLimit: config.PostsLimit,
 	}
-	c.authenticate(config.Credentials, config.PasswordSalt, config.AppkeySalt)
+	c.authenticate(config.Credentials, config.PasswordSalt)
 
 	return &c
 }

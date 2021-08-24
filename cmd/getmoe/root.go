@@ -4,6 +4,7 @@ import (
 	"github.com/urfave/cli/v2"
 
 	"github.com/leonidboykov/getmoe"
+	"github.com/leonidboykov/getmoe/cmd/getmoe/downloader"
 	_ "github.com/leonidboykov/getmoe/provider/danbooru"
 	_ "github.com/leonidboykov/getmoe/provider/gelbooru"
 	_ "github.com/leonidboykov/getmoe/provider/moebooru"
@@ -27,13 +28,20 @@ func rootAction(ctx *cli.Context) error {
 		return err
 	}
 
-	boards, err := getmoe.LoadBoards(config.Boards)
+	d, err := downloader.NewDownloader(config.Boards)
 	if err != nil {
 		return err
 	}
-	if err := boards.ExecuteCommands(config.Download); err != nil {
-		return err
-	}
+
+	_ = d
+
+	// boards, err := getmoe.LoadBoards(config.Boards)
+	// if err != nil {
+	// 	return err
+	// }
+	// if err := boards.ExecuteCommands(config.Download); err != nil {
+	// 	return err
+	// }
 
 	return nil
 }

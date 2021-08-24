@@ -3,6 +3,7 @@ package downloader
 import (
 
 	// init all known providers.
+	"fmt"
 	"sync"
 
 	"github.com/leonidboykov/getmoe"
@@ -13,7 +14,7 @@ import (
 	_ "github.com/leonidboykov/getmoe/provider/sankaku/v2"
 )
 
-// const cacheFile = "getmoe_cache.json"
+const cacheFile = "getmoe_cache.json"
 
 type Downloader struct {
 	Boards     map[string]*getmoe.Board
@@ -24,23 +25,23 @@ type Downloader struct {
 	cache sync.Map
 }
 
-// func NewDownloader(config map[string]getmoe.BoardConfiguration) (*Downloader, error) {
-// 	d := &Downloader{
-// 		Boards: make(map[string]*getmoe.Board),
-// 	}
-// 	d.loadCache(cacheFile)
+func NewDownloader(config map[string]getmoe.BoardConfiguration) (*Downloader, error) {
+	d := &Downloader{
+		Boards: make(map[string]*getmoe.Board),
+	}
+	d.loadCache(cacheFile)
 
-// 	for name, board := range config {
-// 		b, err := getmoe.NewBoard(name, board)
-// 		if err != nil {
-// 			return nil, fmt.Errorf("unable to create a board '%s': %w", name, err)
-// 		}
-// 		d.Boards[name] = b
-// 		d.boardNames = append(d.boardNames, name)
-// 	}
+	for name, board := range config {
+		b, err := getmoe.NewBoard(name, board)
+		if err != nil {
+			return nil, fmt.Errorf("unable to create a board '%s': %w", name, err)
+		}
+		d.Boards[name] = b
+		d.boardNames = append(d.boardNames, name)
+	}
 
-// 	return d, nil
-// }
+	return d, nil
+}
 
 // func (d *Downloader) Execute(cmds []getmoe.DownloadConfiguration) error {
 // 	wg := new(sync.WaitGroup)

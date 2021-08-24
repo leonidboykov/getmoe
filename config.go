@@ -23,7 +23,6 @@ type ProviderConfiguration struct {
 	Name         string      `yaml:"provider"`
 	URL          string      `yaml:"url"`
 	PasswordSalt string      `yaml:"password_salt"`
-	AppkeySalt   string      `yaml:"appkey_salt"`
 	PostsLimit   int         `yaml:"posts_limits"`
 	Credentials  Credentials `yaml:"credentials"`
 }

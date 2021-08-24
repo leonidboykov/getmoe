@@ -8,13 +8,15 @@ import (
 	"github.com/leonidboykov/getmoe"
 )
 
+const appkeySalt = "sankakuapp_%s_Z5NE9YASej"
+
 type credentials struct {
 	Login        string `url:"login"`
 	PasswordHash string `url:"password_hash"`
 	Appkey       string `url:"appkey"`
 }
 
-func (c *Client) authenticate(creds getmoe.Credentials, passwordSalt, appkeySalt string) {
+func (c *Client) authenticate(creds getmoe.Credentials, passwordSalt string) {
 	if creds.Login == "" {
 		return
 	}
