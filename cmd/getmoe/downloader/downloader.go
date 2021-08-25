@@ -1,12 +1,18 @@
 package downloader
 
 import (
-
-	// init all known providers.
+	"bytes"
 	"fmt"
+	"net/url"
+	"path/filepath"
+	"sort"
+	"strings"
 	"sync"
+	"text/template"
 
 	"github.com/leonidboykov/getmoe"
+
+	// init all known providers
 	_ "github.com/leonidboykov/getmoe/provider/danbooru"
 	_ "github.com/leonidboykov/getmoe/provider/gelbooru"
 	_ "github.com/leonidboykov/getmoe/provider/moebooru"
@@ -17,7 +23,7 @@ import (
 const cacheFile = "getmoe_cache.json"
 
 type Downloader struct {
-	Boards     map[string]*getmoe.Board
+	boards     map[string]*getmoe.Board
 	boardNames []string
 
 	// cache stores info about downloaded images with image hash as key.
@@ -27,7 +33,7 @@ type Downloader struct {
 
 func NewDownloader(config map[string]getmoe.BoardConfiguration) (*Downloader, error) {
 	d := &Downloader{
-		Boards: make(map[string]*getmoe.Board),
+		boards: make(map[string]*getmoe.Board),
 	}
 	d.loadCache(cacheFile)
 
@@ -36,51 +42,125 @@ func NewDownloader(config map[string]getmoe.BoardConfiguration) (*Downloader, er
 		if err != nil {
 			return nil, fmt.Errorf("unable to create a board '%s': %w", name, err)
 		}
-		d.Boards[name] = b
+		d.boards[name] = b
 		d.boardNames = append(d.boardNames, name)
 	}
 
 	return d, nil
 }
 
-// func (d *Downloader) Execute(cmds []getmoe.DownloadConfiguration) error {
-// 	wg := new(sync.WaitGroup)
-// 	wg.Add(len(cmds))
-// 	for _, cmd := range cmds {
-// 		cmd := cmd
-// 		go func() {
-// 			d.execCommand(cmd)
-// 			wg.Done()
-// 		}()
-// 	}
-// 	wg.Wait()
-// 	return nil
-// }
+func (d *Downloader) Execute(cmd getmoe.DownloadConfiguration) error {
+	sort.Strings(cmd.Filters)
 
-// func (d *Downloader) execCommand(cmd getmoe.DownloadConfiguration) error {
-// 	// Execute command on all boards if there are no boards specified.
-// 	if len(cmd.Boards) == 0 {
-// 		cmd.Boards = d.boardNames
-// 	}
+	wg := new(sync.WaitGroup)
+	wg.Add(len(cmd.Searches))
+	for _, search := range cmd.Searches {
+		search := search
+		_ = search
+		go func() {
+			d.execCommand(search, cmd.Filters, cmd.SavePath)
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+	return nil
+}
 
-// 	wg := new(sync.WaitGroup)
-// 	for _, name := range cmd.Boards {
-// 		if board, ok := d.Boards[name]; ok {
+func (d *Downloader) execCommand(cmd getmoe.SearchConfiguration, filters []string, savePath string) error {
+	// Execute command on all boards if there are no boards specified.
+	if len(cmd.Boards) == 0 {
+		cmd.Boards = d.boardNames
+	}
 
-// 		}
-// 	}
+	wg := new(sync.WaitGroup)
+	for _, name := range cmd.Boards {
+		if board, ok := d.boards[name]; ok {
+			board := board
+			go func() {
+				d.requestFromBoard(board, cmd.Tags, filters, savePath)
+				wg.Done()
+			}()
+		}
+	}
+	wg.Done()
+	return nil
+}
 
-// 	return nil
-// }
+type templateData struct {
+	BoardName  string
+	PostID     int
+	PostAuthor string
+	FilePath   string
+	FileExt    string
+	FileHash   string
+}
 
-// func (d *Downloader) work(b *getmoe.Board, cmd getmoe.DownloadConfiguration) error {
-// 	posts, err := b.RequestAll(cmd.Tags)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return
-// }
+func (d *Downloader) requestFromBoard(b *getmoe.Board, t getmoe.Tags, filters []string, savePath string) error {
+	posts, err := b.RequestAll(t)
+	if err != nil {
+		return err
+	}
+	posts = d.filterPosts(posts, filters)
 
-// func (d *Downloader) filterPosts(posts []getmoe.Post, filters []string) []getmoe.Post {
-// 	sort.SearchStrings()
-// }
+	tmpl, err := template.New("savepath").Parse(savePath)
+	if err != nil {
+		return err
+	}
+	for _, p := range posts {
+		var fname bytes.Buffer
+		filePath, err := basePathFromURL(p.FileURL)
+		if err != nil {
+			return err
+		}
+		ext := filepath.Ext(filePath)
+		bname := strings.TrimSuffix(filePath, ext)
+		data := templateData{
+			BoardName:  b.Name,
+			PostID:     p.ID,
+			PostAuthor: p.Author,
+			FileHash:   p.Hash,
+			FilePath:   bname,
+			FileExt:    ext,
+		}
+		if err := tmpl.Execute(&fname, data); err != nil {
+			return err
+		}
+		fmt.Println("Saving to", fname.String())
+		d.cache.Store(p.Hash, cacheValue{
+			Board: b.Name,
+			URL:   p.FileURL,
+		})
+	}
+	return nil
+}
+
+func (d *Downloader) filterPosts(posts []getmoe.Post, filters []string) []getmoe.Post {
+	var filteredPosts []getmoe.Post
+	for _, post := range posts {
+		if sliceContains(post.Tags, filters) {
+			continue
+		}
+		if _, ok := d.cache.Load(post.Hash); ok {
+			continue
+		}
+		filteredPosts = append(filteredPosts, post)
+	}
+	return filteredPosts
+}
+
+func sliceContains(a, b []string) bool {
+	for i := range a {
+		if sort.SearchStrings(b, a[i]) != len(b) {
+			return true
+		}
+	}
+	return false
+}
+
+func basePathFromURL(fileURL string) (string, error) {
+	u, err := url.Parse(fileURL)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Base(u.Path), nil
+}

@@ -9,7 +9,7 @@ import (
 // RootConfiguration provides root configuration.
 type RootConfiguration struct {
 	Boards   map[string]BoardConfiguration `yaml:"boards"`
-	Download []DownloadConfiguration       `yaml:"download"`
+	Download DownloadConfiguration         `yaml:"download"`
 }
 
 // BoardConfiguration holds board related configuration.
@@ -38,9 +38,15 @@ type Credentials struct {
 
 // DownloadConfiguration holds download related configuration.
 type DownloadConfiguration struct {
-	Boards   stringOrSlice `yaml:"boards"`
-	Tags     Tags          `yaml:"search"`
-	SavePath string        `yaml:"save_to"`
+	Searches []SearchConfiguration `yaml:"searches"`
+	Filters  stringOrSlice         `yaml:"filters"`
+	SavePath string                `yaml:"save_to"`
+}
+
+// SearchConfiguration holds confguration about searches.
+type SearchConfiguration struct {
+	Tags   Tags          `yaml:"search"`
+	Boards stringOrSlice `yaml:"boards"`
 }
 
 // ReadConfiguraton reads a root configuration from file.

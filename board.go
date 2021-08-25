@@ -2,7 +2,7 @@ package getmoe
 
 // Board holds data for API access.
 type Board struct {
-	name     string
+	Name     string
 	provider Provider
 }
 
@@ -18,7 +18,7 @@ func NewBoard(name string, config BoardConfiguration) (*Board, error) {
 	}
 
 	return &Board{
-		name:     name,
+		Name:     name,
 		provider: provider,
 	}, nil
 }

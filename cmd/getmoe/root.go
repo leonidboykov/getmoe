@@ -33,6 +33,8 @@ func rootAction(ctx *cli.Context) error {
 		return err
 	}
 
+	// d.Requests(config.Boards)
+
 	_ = d
 
 	// boards, err := getmoe.LoadBoards(config.Boards)
