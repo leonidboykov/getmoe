@@ -4,6 +4,7 @@ getmoe
 coverage.txt
 getmoe.yaml
 getmoe.yml
+getmoe_cache.json
 
 ### GoReleaser ###
 /dist

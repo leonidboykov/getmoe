@@ -32,5 +32,5 @@ func applyPresets(name string, config *ProviderConfiguration) error {
 		mergo.Merge(config, defaultPresets)
 		return nil
 	}
-	return fmt.Errorf("getmoe: unknown presets '%s'", name)
+	return fmt.Errorf("unknown presets '%s'", name)
 }

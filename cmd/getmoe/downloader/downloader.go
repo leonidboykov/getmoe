@@ -2,8 +2,13 @@ package downloader
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
+	"io"
+	"log"
+	"net/http"
 	"net/url"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -56,13 +61,13 @@ func (d *Downloader) Execute(cmd getmoe.DownloadConfiguration) error {
 	wg.Add(len(cmd.Searches))
 	for _, search := range cmd.Searches {
 		search := search
-		_ = search
 		go func() {
 			d.execCommand(search, cmd.Filters, cmd.SavePath)
 			wg.Done()
 		}()
 	}
 	wg.Wait()
+	d.saveCache(cacheFile)
 	return nil
 }
 
@@ -76,13 +81,14 @@ func (d *Downloader) execCommand(cmd getmoe.SearchConfiguration, filters []strin
 	for _, name := range cmd.Boards {
 		if board, ok := d.boards[name]; ok {
 			board := board
+			wg.Add(1)
 			go func() {
 				d.requestFromBoard(board, cmd.Tags, filters, savePath)
 				wg.Done()
 			}()
 		}
 	}
-	wg.Done()
+	wg.Wait()
 	return nil
 }
 
@@ -104,6 +110,7 @@ func (d *Downloader) requestFromBoard(b *getmoe.Board, t getmoe.Tags, filters []
 
 	tmpl, err := template.New("savepath").Parse(savePath)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	for _, p := range posts {
@@ -126,8 +133,12 @@ func (d *Downloader) requestFromBoard(b *getmoe.Board, t getmoe.Tags, filters []
 			return err
 		}
 		fmt.Println("Saving to", fname.String())
+		if err := saveFile(p.FileURL, fname.String()); err != nil {
+			log.Println(err)
+		}
 		d.cache.Store(p.Hash, cacheValue{
 			Board: b.Name,
+			ID:    p.ID,
 			URL:   p.FileURL,
 		})
 	}
@@ -143,6 +154,10 @@ func (d *Downloader) filterPosts(posts []getmoe.Post, filters []string) []getmoe
 		if _, ok := d.cache.Load(post.Hash); ok {
 			continue
 		}
+		// TODO: Remove it
+		if float32(post.Width)/float32(post.Height) < 1.10 {
+			continue
+		}
 		filteredPosts = append(filteredPosts, post)
 	}
 	return filteredPosts
@@ -150,8 +165,10 @@ func (d *Downloader) filterPosts(posts []getmoe.Post, filters []string) []getmoe
 
 func sliceContains(a, b []string) bool {
 	for i := range a {
-		if sort.SearchStrings(b, a[i]) != len(b) {
-			return true
+		for j := range b {
+			if a[i] == b[j] {
+				return true
+			}
 		}
 	}
 	return false
@@ -163,4 +180,25 @@ func basePathFromURL(fileURL string) (string, error) {
 		return "", err
 	}
 	return filepath.Base(u.Path), nil
+}
+
+func saveFile(fileURL, fileName string) error {
+	resp, err := http.Get(fileURL)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusNotFound {
+		return errors.New("not found")
+	}
+
+	file, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	io.Copy(file, resp.Body)
+	return nil
 }

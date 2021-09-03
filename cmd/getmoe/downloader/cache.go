@@ -9,6 +9,7 @@ import (
 // cacheValue stores information about downloaded image.
 type cacheValue struct {
 	Board string `json:"board,omitempty"`
+	ID    int    `json:"id,omitempty"`
 	URL   string `json:"url,omitempty"`
 }
 

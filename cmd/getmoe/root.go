@@ -33,17 +33,9 @@ func rootAction(ctx *cli.Context) error {
 		return err
 	}
 
-	// d.Requests(config.Boards)
-
-	_ = d
-
-	// boards, err := getmoe.LoadBoards(config.Boards)
-	// if err != nil {
-	// 	return err
-	// }
-	// if err := boards.ExecuteCommands(config.Download); err != nil {
-	// 	return err
-	// }
+	if err := d.Execute(config.Download); err != nil {
+		return err
+	}
 
 	return nil
 }
