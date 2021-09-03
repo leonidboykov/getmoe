@@ -1,4 +1,4 @@
-# http://editorconfig.org
+# EditorConfig is awesome: https://EditorConfig.org
 
 root = true
 
@@ -16,7 +16,7 @@ indent_size = 4
 
 [*.md]
 trim_trailing_whitespace = false
-indent_size = 4
+indent_size = 2
 
 [Makefile]
 indent_style = tab

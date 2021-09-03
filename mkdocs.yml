@@ -1,0 +1,52 @@
+# Project information
+site_name: GetMoe Docs
+site_description: GetMoe usage manual
+site_author: Leonid Boykov
+site_url: https://leonidboykov.github.io/getmoe
+
+# Repository
+repo_name: leonidboykov/getmoe
+repo_url: https://github.com/leonidboykov/getmoe
+edit_uri: edit/master/docs/
+
+# Copyright
+copyright: 'Copyright &copy; 2017-2021 <a href="https://leonidboykov.com">Leonid Boykov</a>'
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/weather-sunny #fontawesome/solid/sun
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: red
+      toggle:
+        icon: material/weather-night #fontawesome/solid/moon
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    # - navigation.tabs
+    - navigation.sections
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.magiclink:
+      hide_protocol: true
+      repo_url_shorthand: true
+      user: leonidboykov
+      repo: getmoe
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg

@@ -1,78 +1,33 @@
 package getmoe
 
-import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"time"
-)
-
 // Board holds data for API access.
 type Board struct {
-	Provider   Provider
-	httpClient *http.Client
+	Name     string
+	provider Provider
 }
 
-// NewBoard creates a new board with provided configuration.
-func NewBoard(providerName string, config BoardConfiguration) (*Board, error) {
-	providersMu.RLock()
-	provider, ok := providers[providerName]
-	providersMu.RUnlock()
-	if !ok {
-		return nil, fmt.Errorf("getmoe: unknown provider %s", providerName)
+// NewBoard creates a new Board.
+func NewBoard(name string, config BoardConfiguration) (*Board, error) {
+	if err := applyPresets(config.Settings, &config.Provider); err != nil {
+		return nil, err
 	}
 
-	provider.New(config.Provider)
+	provider, err := NewProvider(config.Provider.Name, config.Provider)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Board{
-		Provider: provider,
-		httpClient: &http.Client{
-			Timeout: 10 * time.Second,
-		},
+		Name:     name,
+		provider: provider,
 	}, nil
 }
 
-// NewBoardWithProvider creates a new board with provided configuration.
-func NewBoardWithProvider(provider Provider) *Board {
-	return &Board{
-		Provider: provider,
-		httpClient: &http.Client{
-			Timeout: 10 * time.Second,
-		},
-	}
-}
-
-// Request gets images by tags.
-func (b *Board) Request() ([]Post, error) {
-	req, err := b.Provider.PageRequest()
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := b.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	page, err := b.Provider.Parse(body)
-	if err != nil {
-		return nil, err
-	}
-
-	return page, nil
-}
-
-// RequestAll checks all pages.
-func (b *Board) RequestAll() ([]Post, error) {
+func (b *Board) RequestAll(tags Tags) ([]Post, error) {
 	var pages []Post
+	currentPage := 0
 	for {
-		b.Provider.NextPage()
-		page, err := b.Request()
+		page, err := b.provider.RequestPage(tags, currentPage)
 		if err != nil {
 			return pages, err
 		}
@@ -80,6 +35,7 @@ func (b *Board) RequestAll() ([]Post, error) {
 			break
 		}
 		pages = append(pages, page...)
+		currentPage++
 	}
 	return pages, nil
 }

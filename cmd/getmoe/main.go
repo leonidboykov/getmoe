@@ -4,36 +4,24 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/urfave/cli"
-)
-
-var (
-	version = "master"
-	commit  = "none"
-	date    = "unknown"
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
-	app := cli.NewApp()
-	app.Name = "getmoe"
-	app.Usage = "cli tool for boorus"
-	app.Version = version
-	app.Authors = []cli.Author{{
-		Name:  "Leonid Boykov",
-		Email: "leonid.v.boykov@gmail.com",
-	}}
-	app.Flags = []cli.Flag{
-		cli.BoolFlag{
-			Name:  "quiet, q",
-			Usage: "disable progress bar",
+	app := &cli.App{
+		Name:    "getmoe",
+		Usage:   `cli tool for boorus`,
+		Version: version,
+		Commands: []*cli.Command{
+			&getCommand,
+			&versionCommand,
 		},
-	}
-	app.Commands = []cli.Command{
-		getCommand,
+		Flags:  rootFlags,
+		Action: rootAction,
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }

@@ -1,15 +1,16 @@
 package moebooru
 
 import (
+	"strconv"
 	"strings"
 	"time"
 )
 
-// Post contains native Moebooru data
-type Post struct {
+// post contains native Moebooru data
+type post struct {
 	ID                  int           `json:"id"`
-	Tags                string        `json:"tags"`
-	CreatedAt           int           `json:"created_at"`
+	Tags                tags          `json:"tags"`
+	CreatedAt           unixtime      `json:"created_at"`
 	UpdatedAt           int           `json:"updated_at"`
 	CreatorID           int           `json:"creator_id"`
 	ApproverID          interface{}   `json:"approver_id"`
@@ -60,10 +61,26 @@ type Post struct {
 	} `json:"flag_detail"`
 }
 
-func (p *Post) parseTags() []string {
-	return strings.Split(p.Tags, " ")
+type tags []string
+
+// UnmarshalJSON implements JSON Unmarshaler.
+func (t *tags) UnmarshalJSON(data []byte) error {
+	str, err := strconv.Unquote(string(data))
+	if err != nil {
+		return err
+	}
+	*t = strings.Fields(str)
+	return nil
 }
 
-func (p *Post) parseTime() time.Time {
-	return time.Unix(int64(p.CreatedAt), 0)
+type unixtime time.Time
+
+// UnmarshalJSON implements JSON Unmarshaler.
+func (u *unixtime) UnmarshalJSON(data []byte) error {
+	q, err := strconv.ParseInt(string(data), 10, 64)
+	if err != nil {
+		return err
+	}
+	*(*time.Time)(u) = time.Unix(q, 0)
+	return nil
 }

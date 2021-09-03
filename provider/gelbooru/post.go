@@ -1,34 +1,54 @@
 package gelbooru
 
 import (
+	"strconv"
 	"strings"
 	"time"
 )
 
-// Post contains native Gelbooru data
-type Post struct {
-	Directory    string      `json:"directory"`
-	Hash         string      `json:"hash"`
-	Height       int         `json:"height"`
-	ID           int         `json:"id"`
-	Image        string      `json:"image"`
-	Change       int         `json:"change"`
-	Owner        string      `json:"owner"`
-	ParentID     interface{} `json:"parent_id"`
-	Rating       string      `json:"rating"`
-	Sample       bool        `json:"sample"`
-	SampleHeight int         `json:"sample_height"`
-	SampleWidth  int         `json:"sample_width"`
-	Score        int         `json:"score"`
-	Tags         string      `json:"tags"`
-	Width        int         `json:"width"`
-	FileURL      string      `json:"file_url"`
+// post contains native Gelbooru data.
+type post struct {
+	ID           int      `json:"id"`
+	Width        int      `json:"width"`
+	Height       int      `json:"height"`
+	FileURL      string   `json:"file_url"`
+	PreviewURL   string   `json:"preview_url"`
+	SampleURL    string   `json:"sample_url"`
+	Directory    int      `json:"directory"`
+	Hash         string   `json:"hash"`
+	Image        string   `json:"image"`
+	Change       unixtime `json:"change"`
+	Owner        string   `json:"owner"`
+	ParentID     int      `json:"parent_id"`
+	Rating       string   `json:"rating"`
+	Sample       int      `json:"sample"`
+	SampleHeight int      `json:"sample_height"`
+	SampleWidth  int      `json:"sample_width"`
+	Score        int      `json:"score"`
+	Tags         tags     `json:"tags"`
 }
 
-func (p *Post) parseTags() []string {
-	return strings.Split(p.Tags, " ")
+type tags []string
+
+// UnmarshalJSON implements JSON Unmarshaler.
+func (t *tags) UnmarshalJSON(data []byte) error {
+	str := strings.ReplaceAll(string(data), "\\", "") // hack for escaped slash in tag.
+	str, err := strconv.Unquote(str)
+	if err != nil {
+		return err
+	}
+	*t = strings.Fields(str)
+	return nil
 }
 
-func (p *Post) parseTime() time.Time {
-	return time.Unix(int64(p.Change), 0)
+type unixtime time.Time
+
+// UnmarshalJSON implements JSON Unmarshaler.
+func (u *unixtime) UnmarshalJSON(data []byte) error {
+	q, err := strconv.ParseInt(string(data), 10, 64)
+	if err != nil {
+		return err
+	}
+	*(*time.Time)(u) = time.Unix(q, 0)
+	return nil
 }
